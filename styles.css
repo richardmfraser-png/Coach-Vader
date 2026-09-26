@@ -252,3 +252,100 @@ hr.sep { border:0; border-top:1px solid var(--border); margin:18px 0; }
   .badge-grid { grid-template-columns:1fr; }
   .section-head { align-items:start; flex-direction:column; }
 }
+
+/* ===== Vader Mode V2: cinematic layer ===== */
+.vader-hero {
+  background-image:
+    linear-gradient(90deg, rgba(7,8,11,.97) 0%, rgba(7,8,11,.87) 46%, rgba(7,8,11,.30) 76%, rgba(7,8,11,.14) 100%),
+    url('./assets/vader-hero.webp');
+  background-size:cover; background-position:center right;
+}
+.vader-hero::after { border-color:rgba(237,43,58,.18); }
+.transmission-strip {
+  display:flex; justify-content:space-between; gap:18px; align-items:center; padding:18px 20px;
+  border:1px solid rgba(237,43,58,.24); border-radius:18px;
+  background:linear-gradient(100deg,rgba(237,43,58,.10),rgba(15,16,21,.94));
+  box-shadow:inset 0 0 45px rgba(237,43,58,.025);
+}
+.transmission-strip h3,.transmission-strip p { margin:4px 0; }
+.transmission-strip p { color:var(--muted); }
+
+.stage-cinema {
+  min-height:280px; border-radius:26px; border:1px solid var(--border); padding:32px;
+  display:flex; align-items:end; background-size:cover; background-position:center;
+  margin-bottom:16px; box-shadow:var(--shadow); position:relative; overflow:hidden;
+}
+.stage-cinema::after { content:""; position:absolute; inset:0; border-top:1px solid rgba(255,255,255,.05); pointer-events:none; }
+.stage-cinema > div { max-width:650px; position:relative; z-index:1; }
+.stage-cinema h3 { margin:10px 0 5px; font-size:clamp(2.2rem,5vw,4rem); letter-spacing:-.045em; }
+.stage-cinema p { margin:0; max-width:560px; color:#d0d0d4; line-height:1.55; }
+.stage-gallery { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:10px; margin-bottom:18px; }
+.stage-tile {
+  min-height:230px; border:1px solid var(--border); border-radius:18px; overflow:hidden; background-size:cover; background-position:center;
+  padding:16px; text-align:left; cursor:pointer; display:flex; flex-direction:column; justify-content:flex-end; transition:.18s ease;
+}
+.stage-tile:hover { transform:translateY(-3px); border-color:rgba(237,43,58,.4); }
+.stage-tile span { color:#ff8a96; font-size:.67rem; font-weight:900; letter-spacing:.11em; }
+.stage-tile strong { margin-top:6px; font-size:1rem; }
+.stage-tile small { margin-top:5px; color:#c4c5ca; line-height:1.35; }
+
+.coach-hero { padding:26px; background:linear-gradient(135deg,rgba(237,43,58,.08),#0d0e12 60%); }
+.coach-hero h3 { max-width:820px; font-size:clamp(1.6rem,3vw,2.55rem); margin:8px 0; }
+.coach-results .card { min-height:250px; }
+.vader-answer { border-color:rgba(237,43,58,.28); background:linear-gradient(160deg,rgba(237,43,58,.08),#0c0d11); }
+.human-answer { border-color:rgba(93,211,158,.24); background:linear-gradient(160deg,rgba(93,211,158,.055),#0c0d11); }
+.mission-answer { border-color:rgba(255,191,85,.22); background:linear-gradient(160deg,rgba(255,191,85,.045),#0c0d11); }
+.coach-results small { color:#8f9199; }
+
+.transmission-hero {
+  min-height:390px; display:flex; flex-direction:column; justify-content:center; align-items:flex-start; padding:clamp(24px,5vw,54px);
+  border:1px solid rgba(237,43,58,.26); border-radius:28px; overflow:hidden; position:relative;
+  background:
+    linear-gradient(100deg,rgba(7,8,11,.96),rgba(7,8,11,.73),rgba(7,8,11,.25)),
+    url('./assets/stage-leader.webp') center/cover;
+}
+.transmission-hero > * { position:relative; z-index:2; }
+.transmission-hero h3 { font-size:clamp(2.2rem,5vw,4.4rem); margin:12px 0 8px; max-width:760px; letter-spacing:-.05em; }
+.transmission-hero p { color:#d0d0d4; max-width:720px; font-size:1.05rem; line-height:1.65; }
+.signal-lines { position:absolute; inset:0; z-index:1; opacity:.22; background:repeating-linear-gradient(0deg,transparent 0 9px,rgba(237,43,58,.13) 10px 11px); animation:signalDrift 8s linear infinite; }
+@keyframes signalDrift { to { transform:translateY(22px); } }
+
+.breathing-card { padding:0; overflow:hidden; position:relative; }
+.breathing-image { height:220px; background:
+  linear-gradient(180deg,rgba(7,8,10,.06),rgba(7,8,10,.86)),
+  url('./assets/breathing-vader.webp') center 32%/cover; border-bottom:1px solid var(--border); }
+.breathing-content { padding:20px; }
+.mechanical-note { display:flex; gap:12px; align-items:flex-start; background:#0b0c10; border:1px solid var(--border); border-radius:14px; padding:14px; }
+.mechanical-note p { margin:4px 0 0; }
+.status-dot { width:10px; height:10px; border-radius:50%; background:var(--red); box-shadow:0 0 16px rgba(237,43,58,.65); margin-top:5px; flex:0 0 auto; animation:statusPulse 2.2s ease-in-out infinite; }
+@keyframes statusPulse { 50% { opacity:.35; transform:scale(.82); } }
+
+.debrief-card { border-top:2px solid rgba(237,43,58,.42); }
+.toggle-row { display:flex; gap:16px; align-items:center; justify-content:space-between; padding:13px 0; border-bottom:1px solid var(--border); cursor:pointer; }
+.toggle-row span { display:grid; gap:3px; }
+.toggle-row small { color:var(--muted); }
+.toggle-row input { width:20px; height:20px; accent-color:var(--red); }
+.badge-share { margin-top:10px; }
+.lesson-modal-visual { height:190px; background-size:cover; background-position:center; border-radius:22px 22px 0 0; border-bottom:1px solid var(--border); }
+
+body[data-view="breathing"] .topbar { box-shadow:0 12px 40px rgba(237,43,58,.025); }
+body[data-view="transmissions"] .topbar { border-bottom-color:rgba(237,43,58,.16); }
+
+@media (max-width: 1180px) {
+  .stage-gallery { grid-template-columns:repeat(3,minmax(0,1fr)); }
+}
+@media (max-width: 840px) {
+  .stage-gallery { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .transmission-strip { align-items:flex-start; flex-direction:column; }
+  .transmission-hero { min-height:330px; }
+}
+@media (max-width: 560px) {
+  .stage-gallery { grid-template-columns:1fr; }
+  .stage-tile { min-height:180px; }
+  .stage-cinema { min-height:235px; padding:22px; }
+  .vader-hero { background-position:67% center; }
+  .vader-hero .hero-content { max-width:90%; }
+  .breathing-image { height:180px; }
+}
+.brand-block { position:relative; overflow:hidden; }
+.brand-block::after { content:""; position:absolute; right:-26px; bottom:-20px; width:116px; height:92px; background:url('./assets/vader-hero.webp') 64% center/cover; opacity:.13; filter:grayscale(1) contrast(1.2); mask-image:linear-gradient(90deg,transparent,#000 35%); pointer-events:none; }

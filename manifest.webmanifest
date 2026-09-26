@@ -1,7 +1,7 @@
 {
   "name": "Vader Mode",
   "short_name": "Vader Mode",
-  "description": "A humorous self-development and wellness training app.",
+  "description": "Vader Mode V2 — humorous self-development, reflection and wellness training.",
   "start_url": "./",
   "display": "standalone",
   "background_color": "#08090b",

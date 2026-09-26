@@ -136,6 +136,81 @@
     }
   ];
 
+
+  const stageVisuals = {
+    'starting-out': {image:'./assets/stage-starting.webp', kicker:'STAGE I', tagline:'Enter the room prepared. Leave the stormtroopers outside.'},
+    'getting-established': {image:'./assets/stage-established.webp', kicker:'STAGE II', tagline:'Confidence, clarity and negotiation — minus the planetary destruction.'},
+    'seeking-promotion': {image:'./assets/stage-promotion.webp', kicker:'STAGE III', tagline:'Ambition with a plan. Recognition without ominous corridor pacing.'},
+    'working-with-colleagues': {image:'./assets/stage-colleagues.webp', kicker:'STAGE IV', tagline:'Boundaries, delegation and feedback for people who cannot Force-choke HR.'},
+    'becoming-a-leader': {image:'./assets/stage-leader.webp', kicker:'STAGE V', tagline:'Take responsibility. Give credit. Keep the cape out of the machinery.'}
+  };
+
+  const transmissionPool = [
+    ['The 30-Second Command','Make one point today in 30 seconds or less. Stop when the point is made.','CLARITY'],
+    ['No Psychic Management','Ask clearly for one thing you would normally hope someone notices.','COMMAND'],
+    ['The Alliance Test','Give one person specific credit for something they did well.','ALLIANCE'],
+    ['Reactor Cooldown','Before replying to one irritating message, wait three slow breaths.','CONTROL'],
+    ['Delete One Battle','Remove, decline or postpone one low-value commitment.','RECOVERY'],
+    ['The Listening Probe','In one conversation, ask a follow-up question before giving your opinion.','ALLIANCE'],
+    ['Name the Actual Problem','Take one annoyance and write the factual problem in one sentence.','CLARITY'],
+    ['Clean Ask Protocol','Make one request with what, why and when — no apology sandwich.','COMMAND'],
+    ['Recognition Sweep','Write down one concrete result you produced this week.','COMMAND'],
+    ['No New Wars','When tempted to add a task, finish or delete one first.','RECOVERY'],
+    ['Useful Disagreement','Disagree once without becoming louder, longer or more dramatic.','CONTROL'],
+    ['Delegate a Droid','Hand off, automate or stop one task that does not need your personal cape.','CLARITY'],
+    ['Repair the Corridor','Resolve one small tension instead of collecting it for later.','ALLIANCE'],
+    ['Three Priorities','Choose the three outcomes that matter most today. Everything else is secondary.','CLARITY'],
+    ['Maintenance Is Not Mutiny','Protect 20 minutes for movement, quiet or recovery without earning it first.','RECOVERY']
+  ];
+
+  const coachProfiles = {
+    work: {
+      label:'WORK / PERFORMANCE',
+      vader:'Assume incompetence, seize the controls, and draft an email that future historians will study.',
+      human:'Separate the facts from the irritation. Clarify the outcome, ownership and timing directly.',
+      mission:'Write the desired outcome in one sentence, then make one clean request that moves toward it.'
+    },
+    conflict: {
+      label:'CONFLICT',
+      vader:'Win the exchange immediately. Bonus points if the room becomes noticeably quieter afterward.',
+      human:'Regulate first, describe the behaviour or issue without mind-reading, then say what you need next.',
+      mission:'Use this structure once: “When X happened, the impact was Y. Going forward, I need Z.”'
+    },
+    boundary: {
+      label:'BOUNDARIES',
+      vader:'Announce a new doctrine, close the blast doors, and make everyone regret asking.',
+      human:'A boundary is a clear statement about what you will do, accept or prioritise — not a punishment.',
+      mission:'Say one respectful no, not-now, or alternative without adding five paragraphs of justification.'
+    },
+    stress: {
+      label:'STRESS / OVERLOAD',
+      vader:'Treat every item as urgent and personally supervise the entire galaxy until 2:00 a.m.',
+      human:'Reduce the field. Distinguish urgent from important, choose the next useful action and protect recovery.',
+      mission:'Pick three outcomes for today and remove one thing from the list completely.'
+    },
+    decision: {
+      label:'DECISION',
+      vader:'Decide instantly, dramatically, and preferably while staring out of a large window.',
+      human:'Name the decision, the two or three real criteria, and what information would materially change the choice.',
+      mission:'Write the decision at the top of a note, list three criteria, and choose the next information or action you need.'
+    },
+    relationship: {
+      label:'RELATIONSHIP',
+      vader:'Interpret tone, infer motive, prepare a closing argument, then wonder why this feels exhausting.',
+      human:'Check the story you are telling yourself. Ask, listen, and say what you actually feel or need without accusation.',
+      mission:'Ask one genuine question before explaining your side.'
+    }
+  };
+
+  function transmissionIndex() {
+    const n = Number(todayKey().replaceAll('-','')) + Number(state?.transmissionOffset || 0);
+    return Math.abs(n) % transmissionPool.length;
+  }
+  function todayTransmission() {
+    const t = transmissionPool[transmissionIndex()];
+    return {id:`tx-${transmissionIndex()}`, title:t[0], mission:t[1], dimension:t[2]};
+  }
+
   const defaultState = {
     name: '',
     completedLessons: [],
@@ -151,6 +226,10 @@
     ],
     wisdom: [],
     activity: {},
+    dailyDebriefs: {},
+    transmissions: {},
+    transmissionOffset: 0,
+    settings: {navSound:true, breathingSound:true, haptics:false, volume:0.62},
     xp: 0
   };
 
@@ -160,17 +239,25 @@
   let breathingTimer = null;
   let breathingSeconds = 0;
   let breathPhaseTimer = null;
+  let breathAudioTimer = null;
+  let audioCtx = null;
+  let activeAudioNodes = [];
+  let activeBreathNodes = [];
   let chosenScenario = 0;
+  let swipeStart = null;
 
   const navItems = [
     ['dashboard','⌂','Dashboard'],
     ['training','▦','Vader Training'],
     ['missions','✦',"Today's Orders"],
     ['simulator','◈','Mission Simulator'],
+    ['coach','⌁','Vader vs Human Coach'],
+    ['transmissions','✧','Incoming Transmission'],
     ['checkin','◉','Helmet Check'],
     ['breathing','◌','Breathing Chamber'],
     ['journal','✎','Imperial Log'],
-    ['command','⌁','Command Centre'],
+    ['debrief','☾','Imperial Debrief'],
+    ['command','⌘','Command Centre'],
     ['wisdom','❖','Dark Side Wisdom'],
     ['progress','▤','Progress & Rank'],
     ['settings','⚙','Settings']
@@ -181,9 +268,12 @@
     training:['TRAINING ACADEMY','Vader Training'],
     missions:['DAILY DEPLOYMENT',"Today's Orders"],
     simulator:['TACTICAL EXERCISE','Mission Simulator'],
+    coach:['SITUATION ROOM','Vader vs Human Coach'],
+    transmissions:['PRIORITY CHANNEL','Incoming Transmission'],
     checkin:['SYSTEM DIAGNOSTIC','Helmet Check'],
     breathing:['PRESSURE REGULATION','Breathing Chamber'],
     journal:['DEBRIEFING ARCHIVE','Imperial Log'],
+    debrief:['END-OF-DAY PROTOCOL','Imperial Debrief'],
     command:['OBJECTIVES & COMMITMENTS','Command Centre'],
     wisdom:['SHORT FORM DOCTRINE','Dark Side Wisdom'],
     progress:['READINESS REPORT','Progress & Rank'],
@@ -192,7 +282,14 @@
 
   function loadState() {
     try {
-      return {...defaultState, ...(JSON.parse(localStorage.getItem(STORAGE_KEY)) || {})};
+      const raw = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+      return {
+        ...structuredClone(defaultState),
+        ...raw,
+        settings:{...defaultState.settings,...(raw.settings||{})},
+        dailyDebriefs:raw.dailyDebriefs||{},
+        transmissions:raw.transmissions||{}
+      };
     } catch { return structuredClone(defaultState); }
   }
   function saveState() {
@@ -244,6 +341,71 @@
   }
   function completedPct() { return Math.round((state.completedLessons.length / allLessons.length) * 100); }
 
+
+  function getAudioContext() {
+    const A = window.AudioContext || window.webkitAudioContext;
+    if (!A) return null;
+    if (!audioCtx) audioCtx = new A();
+    if (audioCtx.state === 'suspended') audioCtx.resume().catch(()=>{});
+    return audioCtx;
+  }
+  function masterVolume(mult=1) { return Math.max(0, Math.min(1, Number(state.settings?.volume ?? .62))) * mult; }
+  function trackNode(node) { activeAudioNodes.push(node); node.addEventListener?.('ended',()=>{activeAudioNodes=activeAudioNodes.filter(n=>n!==node);}); return node; }
+  function trackBreathNode(node) { activeBreathNodes.push(node); node.addEventListener?.('ended',()=>{activeBreathNodes=activeBreathNodes.filter(n=>n!==node);}); return node; }
+  function stopActiveAudio() {
+    activeAudioNodes.forEach(n=>{ try{n.stop?.();}catch{} try{n.disconnect?.();}catch{} });
+    activeAudioNodes=[];
+  }
+  function playNavCue() {
+    if (!state.settings?.navSound) return;
+    const ctx=getAudioContext(); if(!ctx) return;
+    const now=ctx.currentTime+.01;
+    [[0,92,.13],[.14,69,.16]].forEach(([delay,freq,dur],idx)=>{
+      const osc=trackNode(ctx.createOscillator()); const gain=ctx.createGain(); const filter=ctx.createBiquadFilter();
+      osc.type='sine'; osc.frequency.setValueAtTime(freq,now+delay); osc.frequency.exponentialRampToValueAtTime(freq*.72,now+delay+dur);
+      filter.type='lowpass'; filter.frequency.value=220;
+      gain.gain.setValueAtTime(.0001,now+delay); gain.gain.exponentialRampToValueAtTime(masterVolume(.16),now+delay+.018); gain.gain.exponentialRampToValueAtTime(.0001,now+delay+dur);
+      osc.connect(filter).connect(gain).connect(ctx.destination); osc.start(now+delay); osc.stop(now+delay+dur+.03);
+    });
+    if (state.settings?.haptics && navigator.vibrate) navigator.vibrate([18,45,22]);
+  }
+  function makeNoise(ctx, seconds=1.4) {
+    const buffer=ctx.createBuffer(1,Math.ceil(ctx.sampleRate*seconds),ctx.sampleRate); const data=buffer.getChannelData(0);
+    for(let i=0;i<data.length;i++) data[i]=(Math.random()*2-1);
+    return buffer;
+  }
+  function scheduleBreathBurst(ctx, when, duration, cutoff, amount) {
+    const src=trackBreathNode(ctx.createBufferSource()); src.buffer=makeNoise(ctx,duration+.15);
+    const filter=ctx.createBiquadFilter(); filter.type='bandpass'; filter.frequency.setValueAtTime(cutoff,when); filter.Q.value=.62;
+    const low=ctx.createBiquadFilter(); low.type='lowpass'; low.frequency.value=1350;
+    const gain=ctx.createGain(); const peak=masterVolume(amount);
+    gain.gain.setValueAtTime(.0001,when); gain.gain.exponentialRampToValueAtTime(Math.max(.0002,peak),when+.13);
+    gain.gain.setValueAtTime(Math.max(.0002,peak),when+Math.max(.16,duration-.18)); gain.gain.exponentialRampToValueAtTime(.0001,when+duration);
+    src.connect(filter).connect(low).connect(gain).connect(ctx.destination); src.start(when); src.stop(when+duration+.03);
+    const tone=trackBreathNode(ctx.createOscillator()); const tg=ctx.createGain(); tone.type='sawtooth'; tone.frequency.value=cutoff<400?72:88;
+    tg.gain.setValueAtTime(.0001,when); tg.gain.exponentialRampToValueAtTime(masterVolume(.018),when+.08); tg.gain.exponentialRampToValueAtTime(.0001,when+duration);
+    tone.connect(tg).connect(ctx.destination); tone.start(when); tone.stop(when+duration+.03);
+  }
+  function mechanicalBreathPulse() {
+    if (!state.settings?.breathingSound) return;
+    const ctx=getAudioContext(); if(!ctx) return;
+    const t=ctx.currentTime+.03;
+    scheduleBreathBurst(ctx,t,.78,520,.22);
+    scheduleBreathBurst(ctx,t+1.43,1.18,330,.26);
+  }
+  function startMechanicalBreathing() {
+    stopMechanicalBreathing();
+    if (!state.settings?.breathingSound) return;
+    mechanicalBreathPulse();
+    breathAudioTimer=setInterval(mechanicalBreathPulse,3200);
+  }
+  function stopMechanicalBreathing() {
+    if (breathAudioTimer) clearInterval(breathAudioTimer);
+    breathAudioTimer=null;
+    activeBreathNodes.forEach(n=>{try{n.stop?.();}catch{} try{n.disconnect?.();}catch{}});
+    activeBreathNodes=[];
+  }
+
   function renderNav() {
     document.getElementById('nav').innerHTML = navItems.map(([id,icon,label]) => `
       <button class="nav-btn ${id===currentView?'active':''}" data-nav="${id}"><span class="nav-icon">${icon}</span>${label}</button>
@@ -251,8 +413,11 @@
     document.querySelectorAll('[data-nav]').forEach(b => b.addEventListener('click', () => navigate(b.dataset.nav)));
   }
 
-  function navigate(view) {
+  function navigate(view, opts={}) {
+    if (!pageMeta[view]) return;
+    if (view !== currentView && !opts.silent) playNavCue();
     currentView = view;
+    document.body.dataset.view = view;
     const [eye,title] = pageMeta[view];
     document.getElementById('pageEyebrow').textContent = eye;
     document.getElementById('pageTitle').textContent = title;
@@ -268,8 +433,8 @@
     view.innerHTML = '';
     const fn = {
       dashboard: renderDashboard, training: renderTraining, missions: renderMissions,
-      simulator: renderSimulator, checkin: renderCheckin, breathing: renderBreathing,
-      journal: renderJournal, command: renderCommand, wisdom: renderWisdom,
+      simulator: renderSimulator, coach: renderCoach, transmissions: renderTransmissions, checkin: renderCheckin, breathing: renderBreathing,
+      journal: renderJournal, debrief: renderDebrief, command: renderCommand, wisdom: renderWisdom,
       progress: renderProgress, settings: renderSettings
     }[currentView];
     fn?.(view);
@@ -283,7 +448,7 @@
     const missionDone = !!state.dailyMissions[todayKey()];
     const streak = calculateStreak();
     root.innerHTML = `
-      <section class="hero">
+      <section class="hero vader-hero">
         <div class="hero-content">
           <div class="hero-kicker">● SYSTEMS ONLINE</div>
           <h3>Welcome back${name}.</h3>
@@ -325,10 +490,16 @@
         <div class="card warning"><strong>${esc(lesson.warning)}</strong></div>
       </section>
 
-      <section class="section grid grid-3">
+      <section class="section transmission-strip">
+        <div><div class="mini-label">INCOMING TRANSMISSION // ${esc(todayTransmission().dimension)}</div><h3>${esc(todayTransmission().title)}</h3><p>${esc(todayTransmission().mission)}</p></div>
+        <button class="btn btn-primary" data-go="transmissions">Open transmission</button>
+      </section>
+
+      <section class="section grid grid-4">
         <article class="card hover" data-go="simulator"><div class="mini-label">2 MINUTES</div><h4>Mission Simulator</h4><p>Practice a difficult situation without frightening Human Resources.</p></article>
-        <article class="card hover" data-go="breathing"><div class="mini-label">RESET</div><h4>Breathing Chamber</h4><p>Regulate first. Rule nothing. A calm nervous system makes better decisions.</p></article>
-        <article class="card hover" data-go="journal"><div class="mini-label">DEBRIEF</div><h4>Imperial Log</h4><p>What did Vader want to do? What did the functioning adult actually do?</p></article>
+        <article class="card hover" data-go="coach"><div class="mini-label">SITUATION ROOM</div><h4>Vader vs Human Coach</h4><p>Bring a real-life problem. Get the dramatic instinct and the useful response.</p></article>
+        <article class="card hover" data-go="breathing"><div class="mini-label">RESET</div><h4>Breathing Chamber</h4><p>Regulate first. Rule nothing. Mechanical breathing included.</p></article>
+        <article class="card hover" data-go="debrief"><div class="mini-label">60 SECONDS</div><h4>Imperial Debrief</h4><p>What worked, where you nearly went Full Vader, and tomorrow’s mission.</p></article>
       </section>
     `;
     document.getElementById('heroMission').onclick = () => navigate('missions');
@@ -337,13 +508,16 @@
   }
 
   function renderTraining(root) {
-    const selected = stageFilter === 'all' ? allLessons : stages.find(s=>s.id===stageFilter).lessons;
+    const stage = stageFilter === 'all' ? null : stages.find(s=>s.id===stageFilter);
+    const selected = stage ? stage.lessons : allLessons;
+    const visual = stage ? stageVisuals[stage.id] : null;
     root.innerHTML = `
-      <div class="section-head"><div><h3>25 lessons. Five training stages.</h3><p>The book's chapter sequence becomes a practical, humorous self-development curriculum.</p></div><div class="progress-ring" style="--p:${completedPct()}%"><span>${completedPct()}%</span></div></div>
+      ${stage ? `<section class="stage-cinema" style="background-image:linear-gradient(90deg,rgba(5,6,8,.94),rgba(5,6,8,.55),rgba(5,6,8,.18)),url('${visual.image}')"><div><div class="hero-kicker">${visual.kicker}</div><h3>${esc(stage.name)}</h3><p>${esc(visual.tagline)}</p></div></section>` : `<div class="section-head"><div><h3>25 lessons. Five training stages.</h3><p>The book's chapter sequence becomes a practical, humorous self-development curriculum.</p></div><div class="progress-ring" style="--p:${completedPct()}%"><span>${completedPct()}%</span></div></div>`}
       <div class="stage-tabs">
         <button class="stage-btn ${stageFilter==='all'?'active':''}" data-stage="all">All training</button>
         ${stages.map(s=>`<button class="stage-btn ${stageFilter===s.id?'active':''}" data-stage="${s.id}">${s.name}</button>`).join('')}
       </div>
+      ${!stage ? `<div class="stage-gallery">${stages.map(s=>{const v=stageVisuals[s.id];return `<button class="stage-tile" data-stage="${s.id}" style="background-image:linear-gradient(180deg,transparent 10%,rgba(4,5,7,.92)),url('${v.image}')"><span>${v.kicker}</span><strong>${esc(s.name)}</strong><small>${esc(v.tagline)}</small></button>`}).join('')}</div>`:''}
       <div class="lesson-list">
         ${selected.map(l=>`
           <article class="card hover lesson-card ${state.completedLessons.includes(l.id)?'done':''}" data-lesson="${l.id}">
@@ -431,6 +605,63 @@
     document.getElementById('nextScenario').onclick = () => { chosenScenario=(chosenScenario+1)%scenarios.length; render(); };
   }
 
+
+  function coachProfileFor(text, chosen) {
+    if (chosen && chosen !== 'auto') return chosen;
+    const t=text.toLowerCase();
+    if (/relationship|partner|friend|family|wife|husband|girlfriend|boyfriend|texted|message/.test(t)) return 'relationship';
+    if (/no|boundary|decline|refuse|too much|overcommit/.test(t)) return 'boundary';
+    if (/stress|overwhelm|busy|calendar|exhaust|tired|too many/.test(t)) return 'stress';
+    if (/decid|choose|option|whether|uncertain/.test(t)) return 'decision';
+    if (/argument|conflict|angry|annoy|critic|disagree|rude/.test(t)) return 'conflict';
+    return 'work';
+  }
+  function renderCoach(root) {
+    root.innerHTML=`
+      <section class="coach-hero card">
+        <div class="mini-label">VADER VS HUMAN</div><h3>Bring the situation. Separate the cape from the useful response.</h3>
+        <p>This is an offline reflection coach — deliberately simple, fast and funny.</p>
+        <div class="field"><label>What happened?</label><textarea id="coachInput" placeholder="e.g. A colleague missed a deadline and I am about to send the message of the century..."></textarea></div>
+        <div class="field"><label>Context</label><select id="coachType"><option value="auto">Auto-detect</option><option value="work">Work / performance</option><option value="conflict">Conflict</option><option value="boundary">Boundary</option><option value="stress">Stress / overload</option><option value="decision">Decision</option><option value="relationship">Relationship</option></select></div>
+        <button class="btn btn-primary" id="coachBtn">Consult the Dark Side</button>
+      </section>
+      <section id="coachResult" class="section"></section>`;
+    document.getElementById('coachBtn').onclick=()=>{
+      const text=document.getElementById('coachInput').value.trim(); if(!text) return toast('Give the Situation Room something to work with.');
+      const key=coachProfileFor(text,document.getElementById('coachType').value); const c=coachProfiles[key];
+      document.getElementById('coachResult').innerHTML=`<div class="grid grid-3 coach-results">
+        <article class="card vader-answer"><div class="mini-label">VADER INSTINCT</div><h4>${esc(c.label)}</h4><p>${esc(c.vader)}</p><small>Emotion acknowledged. Implementation not recommended.</small></article>
+        <article class="card human-answer"><div class="mini-label">FUNCTIONAL HUMAN</div><h4>Keep the power. Lose the collateral damage.</h4><p>${esc(c.human)}</p></article>
+        <article class="card mission-answer"><div class="mini-label">BEST MISSION</div><h4>Your next useful move</h4><p>${esc(c.mission)}</p><button class="btn btn-small btn-primary" data-copy-coach>Copy mission</button></article>
+      </div>`;
+      document.querySelector('[data-copy-coach]').onclick=()=>navigator.clipboard?.writeText(c.mission).then(()=>toast('Mission copied.')).catch(()=>toast('Mission ready to copy manually.'));
+      markActivity('coach',2);
+    };
+  }
+
+  function renderTransmissions(root) {
+    const tx=todayTransmission(); const d=todayKey(); const status=state.transmissions[d]||{};
+    root.innerHTML=`
+      <section class="transmission-hero">
+        <div class="signal-lines" aria-hidden="true"></div>
+        <div class="mini-label">PRIORITY TRANSMISSION // ${esc(tx.dimension)}</div>
+        <h3>${esc(tx.title)}</h3><p>${esc(tx.mission)}</p>
+        <div class="row"><button class="btn ${status.completed?'btn-ghost':'btn-primary'}" id="txAction">${status.completed?'✓ Mission completed':status.accepted?'Complete transmission':'Accept transmission'}</button><button class="btn btn-ghost" id="txAlternate">Request alternate order</button></div>
+      </section>
+      <section class="section grid grid-3">
+        <article class="card"><div class="mini-label">RULE 01</div><h4>Keep it small.</h4><p>One behaviour. One day. No heroic lifestyle reconstruction before lunch.</p></article>
+        <article class="card"><div class="mini-label">RULE 02</div><h4>Keep it human.</h4><p>The joke is Vader. The objective is calmer, clearer, more useful behaviour.</p></article>
+        <article class="card"><div class="mini-label">RULE 03</div><h4>Report back.</h4><p>Finish with the Imperial Debrief if the mission produced anything worth learning.</p></article>
+      </section>`;
+    document.getElementById('txAction').onclick=()=>{
+      state.transmissions[d] ||= {id:tx.id,accepted:false,completed:false};
+      if (!state.transmissions[d].accepted) { state.transmissions[d].accepted=true; toast('Transmission accepted. Try to look suitably serious.'); }
+      else if (!state.transmissions[d].completed) { state.transmissions[d].completed=true; markActivity('transmission',4); toast('Transmission complete. +4 XP.'); }
+      saveState(); render();
+    };
+    document.getElementById('txAlternate').onclick=()=>{state.transmissionOffset=(state.transmissionOffset||0)+1;delete state.transmissions[d];saveState();playNavCue();render();};
+  }
+
   function renderCheckin(root) {
     const current = state.checkins[todayKey()] || {energy:6,focus:6,confidence:6,calm:6,patience:6};
     const vals = ['energy','focus','confidence','calm','patience'];
@@ -489,23 +720,27 @@
   function renderBreathing(root) {
     root.innerHTML = `
       <div class="grid grid-2">
-        <article class="card">
-          <div class="mini-label">BREATHING CHAMBER</div>
-          <h3>Regulate first. Command second.</h3>
-          <p>Slow breathing can give your nervous system enough room to choose a response rather than launch one.</p>
-          <div class="duration-row"><button class="btn btn-small" data-duration="120">2 min</button><button class="btn btn-small" data-duration="300">5 min</button><button class="btn btn-small" data-duration="600">10 min</button></div>
-          <div class="breathe-wrap">
-            <div id="breatheOrb" class="breathe-orb"><strong id="phaseText">READY</strong></div>
-            <div id="timerText" class="timer">02:00</div>
-            <div class="row"><button class="btn btn-primary" id="startBreath">Start</button><button class="btn btn-ghost" id="stopBreath">Reset</button></div>
+        <article class="card breathing-card">
+          <div class="breathing-image" aria-hidden="true"></div>
+          <div class="breathing-content">
+            <div class="mini-label">BREATHING CHAMBER // MECHANICAL RESPIRATOR</div>
+            <h3>Regulate first. Command second.</h3>
+            <p>Slow breathing gives your nervous system room to choose a response instead of launching one. The chamber now includes an original synthesized mechanical respirator soundscape.</p>
+            <div class="duration-row"><button class="btn btn-small" data-duration="120">2 min</button><button class="btn btn-small" data-duration="300">5 min</button><button class="btn btn-small" data-duration="600">10 min</button></div>
+            <div class="breathe-wrap">
+              <div id="breatheOrb" class="breathe-orb"><strong id="phaseText">READY</strong></div>
+              <div id="timerText" class="timer">02:00</div>
+              <div class="row"><button class="btn btn-primary" id="startBreath">Start chamber</button><button class="btn btn-ghost" id="stopBreath">Reset</button><button class="btn btn-ghost" id="breathSoundToggle">Sound: ${state.settings.breathingSound?'ON':'OFF'}</button></div>
+            </div>
           </div>
         </article>
         <article class="card">
           <div class="mini-label">CYCLE</div>
           <h3>4 · 2 · 6</h3>
-          <p><strong>Inhale 4</strong> → hold 2 → <strong>exhale 6</strong>. The longer exhale keeps this exercise firmly in the category of “less dramatic than force choking.”</p>
+          <p><strong>Inhale 4</strong> → hold 2 → <strong>exhale 6</strong>. The respirator ambience is atmosphere, not a command to match its rhythm.</p>
           <hr class="sep" />
-          <div class="warning card" style="padding:14px"><strong>Comfort first.</strong><p>If breath-holding feels unpleasant, skip the hold and breathe normally. This is a simple relaxation tool, not medical treatment.</p></div>
+          <div class="mechanical-note"><span class="status-dot"></span><div><strong>Synthetic chamber audio</strong><p>Generated in your browser from filtered noise and low tones. It is designed to evoke the familiar mechanical respirator feel without using a film recording.</p></div></div>
+          <div class="warning card" style="padding:14px;margin-top:14px"><strong>Comfort first.</strong><p>If breath-holding feels unpleasant, skip the hold and breathe normally. This is a simple relaxation tool, not medical treatment.</p></div>
         </article>
       </div>
     `;
@@ -514,11 +749,12 @@
     breathingSeconds=selected; updateTimer();
     document.getElementById('startBreath').onclick=()=>startBreathing(selected);
     document.getElementById('stopBreath').onclick=()=>{clearBreathing(); breathingSeconds=selected; updateTimer(); resetOrb();};
+    document.getElementById('breathSoundToggle').onclick=()=>{state.settings.breathingSound=!state.settings.breathingSound;saveState();if(!state.settings.breathingSound)stopMechanicalBreathing();else if(breathingTimer)startMechanicalBreathing();document.getElementById('breathSoundToggle').textContent=`Sound: ${state.settings.breathingSound?'ON':'OFF'}`;};
   }
 
   function startBreathing(seconds) {
     clearBreathing(); breathingSeconds=seconds; updateTimer();
-    runBreathPhase();
+    runBreathPhase(); startMechanicalBreathing();
     breathingTimer=setInterval(()=>{
       breathingSeconds--; updateTimer();
       if (breathingSeconds<=0) {
@@ -537,7 +773,7 @@
     breathPhaseTimer=setTimeout(runBreathPhase,sec*1000);
   }
   function resetOrb(){ const orb=document.getElementById('breatheOrb'); const txt=document.getElementById('phaseText'); if(orb)orb.className='breathe-orb'; if(txt)txt.textContent='READY'; phaseIndex=0; }
-  function clearBreathing(){ if(breathingTimer)clearInterval(breathingTimer); if(breathPhaseTimer)clearTimeout(breathPhaseTimer); breathingTimer=null; breathPhaseTimer=null; }
+  function clearBreathing(){ if(breathingTimer)clearInterval(breathingTimer); if(breathPhaseTimer)clearTimeout(breathPhaseTimer); breathingTimer=null; breathPhaseTimer=null; stopMechanicalBreathing(); }
   function updateTimer(){ const t=document.getElementById('timerText'); if(!t)return; const m=Math.floor(breathingSeconds/60); const s=breathingSeconds%60; t.textContent=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`; }
   function chime(){ try{const A=window.AudioContext||window.webkitAudioContext;const c=new A();const o=c.createOscillator();const g=c.createGain();o.type='sine';o.frequency.value=540;g.gain.setValueAtTime(.07,c.currentTime);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+1.2);o.connect(g);g.connect(c.destination);o.start();o.stop(c.currentTime+1.2);}catch{} }
 
@@ -566,6 +802,29 @@
       markActivity('journal',2); saveState(); toast('Debrief archived.'); render();
     };
     root.querySelectorAll('[data-del-journal]').forEach(b=>b.onclick=()=>{state.journals=state.journals.filter(j=>j.id!==b.dataset.delJournal);saveState();render();});
+  }
+
+
+  function renderDebrief(root) {
+    const d=todayKey(); const existing=state.dailyDebriefs[d]||{};
+    const recent=Object.entries(state.dailyDebriefs||{}).sort((a,b)=>b[0].localeCompare(a[0])).slice(0,7);
+    root.innerHTML=`
+      <div class="grid grid-2">
+        <article class="card debrief-card">
+          <div class="mini-label">60-SECOND SHUTDOWN SEQUENCE</div><h3>Close the day without a trilogy.</h3>
+          <div class="field"><label>What went well?</label><textarea id="dWin" placeholder="One win is enough.">${esc(existing.win||'')}</textarea></div>
+          <div class="field"><label>Where did I nearly go Full Vader?</label><textarea id="dVader" placeholder="The dramatic impulse, reaction or unnecessary war...">${esc(existing.vader||'')}</textarea></div>
+          <div class="field"><label>What did I learn?</label><textarea id="dLearn" placeholder="One useful sentence.">${esc(existing.learn||'')}</textarea></div>
+          <div class="field"><label>Tomorrow's mission</label><textarea id="dTomorrow" placeholder="Small, concrete, useful.">${esc(existing.tomorrow||'')}</textarea></div>
+          <button class="btn btn-primary" id="saveDebrief">${existing.savedAt?'Update debrief':'Save debrief'}</button>
+        </article>
+        <article class="card"><div class="mini-label">RECENT SHUTDOWNS</div><h3>Imperial performance notes</h3><div class="list" style="margin-top:12px">${recent.length?recent.map(([date,x])=>`<div class="list-item"><div><strong>${esc(date)}</strong><p>${esc(x.win||x.learn||'Debrief complete').slice(0,150)}</p></div></div>`).join(''):'<div class="empty">No daily debriefs yet. Even the Empire eventually clocks off.</div>'}</div></article>
+      </div>`;
+    document.getElementById('saveDebrief').onclick=()=>{
+      const entry={win:document.getElementById('dWin').value.trim(),vader:document.getElementById('dVader').value.trim(),learn:document.getElementById('dLearn').value.trim(),tomorrow:document.getElementById('dTomorrow').value.trim(),savedAt:new Date().toISOString()};
+      if(!entry.win && !entry.vader && !entry.learn && !entry.tomorrow) return toast('Give the day at least one sentence.');
+      const first=!state.dailyDebriefs[d]; state.dailyDebriefs[d]=entry; if(first)markActivity('debrief',3); saveState(); toast('Imperial debrief saved. Systems can power down.'); render();
+    };
   }
 
   function renderCommand(root) {
@@ -616,7 +875,10 @@
       ['Did Not Build a Death Star','Complete 10 lessons',state.completedLessons.length>=10],
       ['Functional Overlord','Complete all 25 lessons',state.completedLessons.length>=25],
       ['Strategic Recognition','Complete one goal',state.goals.some(g=>g.done)],
-      ['Seven-Day Command','Stay active seven days in a row',calculateStreak()>=7]
+      ['Seven-Day Command','Stay active seven days in a row',calculateStreak()>=7],
+      ['Situation Room Survivor','Use Vader vs Human Coach',Object.values(state.activity).some(a=>a.coach)],
+      ['Transmission Received','Complete an Incoming Transmission',Object.values(state.activity).some(a=>a.transmission)],
+      ['Powered Down Properly','Complete an Imperial Debrief',Object.values(state.activity).some(a=>a.debrief)]
     ];
     root.innerHTML=`
       <section class="grid grid-3">
@@ -628,8 +890,31 @@
         <article class="card"><div class="mini-label">7-DAY READINESS</div><h3>Helmet trend</h3><svg class="sparkline" viewBox="0 0 100 80" preserveAspectRatio="none"><line class="gridline" x1="0" x2="100" y1="10" y2="10"></line><line class="gridline" x1="0" x2="100" y1="40" y2="40"></line><line class="gridline" x1="0" x2="100" y1="70" y2="70"></line>${points?`<polyline points="${points}"></polyline>`:''}</svg><div class="space"><small class="muted">${last7[0].date.slice(5)}</small><small class="muted">${last7[6].date.slice(5)}</small></div></article>
         <article class="card"><div class="mini-label">NEXT RANK</div><h3>${r.name}</h3><div class="xp-track" style="height:10px"><span style="width:${r.pct}%"></span></div><p>${r.pct}% through this rank band. XP comes from useful behaviour, not suffering.</p></article>
       </section>
-      <section class="section"><div class="section-head"><div><h3>Badges of Questionable Importance</h3><p>Entirely unnecessary. Strangely motivating.</p></div></div><div class="badge-grid">${badges.map(b=>`<div class="badge ${b[2]?'unlocked':''}"><strong>${b[2]?'★ ':'☆ '}${esc(b[0])}</strong><small>${esc(b[1])}</small></div>`).join('')}</div></section>`;
+      <section class="section"><div class="section-head"><div><h3>Badges of Questionable Importance</h3><p>Entirely unnecessary. Strangely motivating.</p></div></div><div class="badge-grid">${badges.map((b,i)=>`<div class="badge ${b[2]?'unlocked':''}"><strong>${b[2]?'★ ':'☆ '}${esc(b[0])}</strong><small>${esc(b[1])}</small>${b[2]?`<button class="btn btn-small btn-ghost badge-share" data-share-badge="${i}">Share card</button>`:''}</div>`).join('')}</div></section>`;
+    root.querySelectorAll('[data-share-badge]').forEach(btn=>btn.onclick=()=>{const b=badges[Number(btn.dataset.shareBadge)];shareAchievement(b[0],b[1]);});
   }
+
+
+  async function shareAchievement(title, subtitle='Mission accomplished') {
+    const canvas=document.createElement('canvas'); canvas.width=1200; canvas.height=675; const ctx=canvas.getContext('2d');
+    ctx.fillStyle='#08090b';ctx.fillRect(0,0,1200,675);
+    try{
+      const img=new Image(); img.src='./assets/vader-hero.webp'; await img.decode();
+      ctx.globalAlpha=.42; ctx.drawImage(img,650,0,550,675); ctx.globalAlpha=1;
+    }catch{}
+    const grad=ctx.createLinearGradient(0,0,1000,0);grad.addColorStop(0,'#08090b');grad.addColorStop(.62,'rgba(8,9,11,.94)');grad.addColorStop(1,'rgba(8,9,11,.18)');ctx.fillStyle=grad;ctx.fillRect(0,0,1200,675);
+    ctx.fillStyle='#ed2b3a';ctx.fillRect(72,76,92,8);
+    ctx.fillStyle='#ff8791';ctx.font='700 24px system-ui, sans-serif';ctx.fillText('VADER MODE // ACHIEVEMENT UNLOCKED',72,132);
+    ctx.fillStyle='#ffffff';ctx.font='900 64px system-ui, sans-serif';wrapCanvasText(ctx,title,72,228,650,74);
+    ctx.fillStyle='#b7b9c1';ctx.font='400 29px system-ui, sans-serif';wrapCanvasText(ctx,subtitle,72,400,610,40);
+    ctx.fillStyle='#ffffff';ctx.font='700 24px system-ui, sans-serif';ctx.fillText(`${state.xp||0} XP  •  ${rankInfo().name}`,72,592);
+    ctx.fillStyle='#7e818a';ctx.font='400 20px system-ui, sans-serif';ctx.fillText('Be formidable. Remain functional.',72,630);
+    const blob=await new Promise(r=>canvas.toBlob(r,'image/png',.95)); if(!blob)return;
+    const file=new File([blob],`vader-mode-${title.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')}.png`,{type:'image/png'});
+    try{if(navigator.canShare?.({files:[file]})){await navigator.share({title:'Vader Mode',text:`${title} — ${subtitle}`,files:[file]});return;}}catch(e){if(e?.name==='AbortError')return;}
+    const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=file.name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);toast('Achievement card created.');
+  }
+  function wrapCanvasText(ctx,text,x,y,maxWidth,lineHeight){const words=String(text).split(/\s+/);let line='';let yy=y;for(const word of words){const test=line?line+' '+word:word;if(ctx.measureText(test).width>maxWidth&&line){ctx.fillText(line,x,yy);line=word;yy+=lineHeight;}else line=test;}if(line)ctx.fillText(line,x,yy);}
 
   function calculateStreak() {
     const dates = new Set(Object.keys(state.activity).filter(d => Object.keys(state.activity[d]||{}).length));
@@ -647,16 +932,30 @@
           <button class="btn btn-primary" id="saveName">Save</button>
         </article>
         <article class="card">
+          <div class="mini-label">SOUND & MOTION</div><h3>Cinematic controls</h3>
+          <label class="toggle-row"><span><strong>Navigation cue</strong><small>Original two-hit low cinematic cue between sections.</small></span><input id="navSound" type="checkbox" ${state.settings.navSound?'checked':''}></label>
+          <label class="toggle-row"><span><strong>Breathing Chamber audio</strong><small>Synthesized mechanical respirator ambience.</small></span><input id="breathingSound" type="checkbox" ${state.settings.breathingSound?'checked':''}></label>
+          <label class="toggle-row"><span><strong>Haptics</strong><small>Small vibration on supported devices.</small></span><input id="haptics" type="checkbox" ${state.settings.haptics?'checked':''}></label>
+          <div class="field"><label>Sound volume <span id="volLabel">${Math.round((state.settings.volume||0)*100)}%</span></label><input id="volume" type="range" min="0" max="1" step="0.05" value="${state.settings.volume ?? .62}"></div>
+          <button class="btn btn-ghost" id="testSound">Test navigation cue</button>
+        </article>
+        <article class="card">
           <div class="mini-label">DATA</div><h3>Your data stays in this browser</h3>
-          <p>Version 1 uses localStorage only. Export a backup if you want to move devices.</p>
+          <p>Version 2 still uses localStorage only. Export a backup if you want to move devices.</p>
           <div class="row"><button class="btn" id="exportData">Export JSON</button><label class="btn btn-ghost" for="importFile">Import JSON</label><input id="importFile" type="file" accept="application/json" hidden></div>
+        </article>
+        <article class="card">
+          <div class="mini-label">GESTURES</div><h3>Swipe the command deck</h3><p>On touch devices, swipe left or right across the main content to move between app sections. Form controls are ignored so journaling remains civilized.</p>
         </article>
       </div>
       <section class="section card warning"><div class="mini-label">DANGER ZONE</div><h3>Reset the Empire</h3><p>Deletes all local progress, logs, goals, check-ins and customization from this browser.</p><button class="btn btn-ghost" id="resetData">Reset all local data</button></section>
-      <section class="section card"><div class="mini-label">ABOUT THIS PROTOTYPE</div><p>This is an original personal wellness app that uses the chapter themes of <em>Be More Vader</em> as a humorous training framework. It deliberately paraphrases the lessons rather than reproducing the book, and it uses no official Star Wars imagery or audio.</p></section>`;
+      <section class="section card"><div class="mini-label">ABOUT V2</div><p>Personal-use build based on the supplied <em>Be More Vader</em> scan and the wellness framework. Selected imagery from the supplied scan is used as chapter atmosphere. Audio is generated in-browser; it does not contain a film soundtrack or official recording.</p></section>`;
     document.getElementById('saveName').onclick=()=>{state.name=document.getElementById('nameInput').value.trim();saveState();toast('Command profile updated.');};
+    ['navSound','breathingSound','haptics'].forEach(id=>document.getElementById(id).onchange=e=>{state.settings[id]=e.target.checked;saveState();});
+    document.getElementById('volume').oninput=e=>{state.settings.volume=Number(e.target.value);document.getElementById('volLabel').textContent=`${Math.round(Number(e.target.value)*100)}%`;saveState();};
+    document.getElementById('testSound').onclick=()=>playNavCue();
     document.getElementById('exportData').onclick=()=>{const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`vader-mode-backup-${todayKey()}.json`;a.click();URL.revokeObjectURL(a.href);};
-    document.getElementById('importFile').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{state={...defaultState,...JSON.parse(r.result)};saveState();toast('Backup imported.');render();}catch{toast('That backup could not be read.');}};r.readAsText(f);};
+    document.getElementById('importFile').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const raw=JSON.parse(r.result);state={...structuredClone(defaultState),...raw,settings:{...defaultState.settings,...(raw.settings||{})}};saveState();toast('Backup imported.');render();}catch{toast('That backup could not be read.');}};r.readAsText(f);};
     document.getElementById('resetData').onclick=()=>{if(confirm('Reset all Vader Mode data on this browser?')){state=structuredClone(defaultState);saveState();render();toast('Local data reset. The corridor is eerily quiet.');}};
   }
 
@@ -664,7 +963,8 @@
     const l=allLessons.find(x=>x.id===id); if(!l)return;
     const modal=document.getElementById('modal');
     const done=state.completedLessons.includes(id);
-    modal.innerHTML=`<div class="modal-inner">
+    const stage=stages.find(s=>s.name===l.stageName); const visual=stage?stageVisuals[stage.id]:null;
+    modal.innerHTML=`<div class="lesson-modal-visual" style="background-image:linear-gradient(90deg,rgba(8,9,11,.22),rgba(8,9,11,.82)),url('${visual?.image||'./assets/vader-hero.webp'}')"></div><div class="modal-inner">
       <div class="modal-head"><div><div class="mini-label">LESSON ${String(l.number).padStart(2,'0')} · ${esc(l.stageName)}</div><h3>${esc(l.title)}</h3></div><button class="modal-close" id="closeModal">×</button></div>
       <div class="modal-block"><h5>VADER → HUMAN</h5><p>${esc(l.translation)}</p></div>
       <div class="modal-block"><h5>YOUR MISSION</h5><p>${esc(l.mission)}</p></div>
@@ -685,6 +985,13 @@
     root.querySelectorAll('[data-lesson]').forEach(b=>b.onclick=()=>openLesson(b.dataset.lesson));
   }
 
+
+  function initSwipeNavigation() {
+    const el=document.getElementById('view');
+    el.addEventListener('touchstart',e=>{const t=e.changedTouches[0];const target=e.target;if(target.closest('input,textarea,select,button,dialog,.no-swipe')){swipeStart=null;return;}swipeStart={x:t.clientX,y:t.clientY,time:Date.now()};},{passive:true});
+    el.addEventListener('touchend',e=>{if(!swipeStart)return;const t=e.changedTouches[0];const dx=t.clientX-swipeStart.x,dy=t.clientY-swipeStart.y,dt=Date.now()-swipeStart.time;swipeStart=null;if(dt>900||Math.abs(dx)<58||Math.abs(dy)>Math.abs(dx)*.72)return;const ids=navItems.map(x=>x[0]);const i=ids.indexOf(currentView);const next=dx<0?Math.min(ids.length-1,i+1):Math.max(0,i-1);if(next!==i)navigate(ids[next]);},{passive:true});
+  }
+
   document.getElementById('menuBtn').onclick=()=>document.querySelector('.sidebar').classList.toggle('open');
   document.getElementById('quickMissionBtn').onclick=()=>navigate('missions');
   document.getElementById('modal').addEventListener('click', e=>{if(e.target===e.currentTarget)e.currentTarget.close();});
@@ -693,5 +1000,7 @@
     window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
   }
 
+  document.body.dataset.view=currentView;
+  initSwipeNavigation();
   renderNav(); updateRankUI(); render();
 })();
