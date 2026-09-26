@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#0b0b0d" />
+  <meta name="description" content="Vader Mode — a humorous self-development and wellness training app." />
+  <title>Vader Mode</title>
+  <link rel="manifest" href="./manifest.webmanifest" />
+  <link rel="icon" href="./icon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="Primary">
+      <div class="brand-block">
+        <div class="brand-mark" aria-hidden="true">
+          <span class="brand-eye left"></span><span class="brand-eye right"></span>
+        </div>
+        <div>
+          <div class="eyebrow">THE DARK SIDE GUIDE TO</div>
+          <h1>VADER MODE</h1>
+          <p class="brand-sub">Being a better human. Dramatically.</p>
+        </div>
+      </div>
+
+      <nav id="nav" class="nav-list"></nav>
+
+      <div class="sidebar-card">
+        <div class="mini-label">CURRENT RANK</div>
+        <strong id="rankName">Young Apprentice</strong>
+        <div class="xp-track"><span id="xpBar"></span></div>
+        <small id="xpText">0 XP</small>
+      </div>
+
+      <footer class="sidebar-footer">
+        Personal-use prototype. Original wellness content inspired by chapter themes from <em>Be More Vader</em>. No affiliation with Lucasfilm or Disney.
+      </footer>
+    </aside>
+
+    <main class="main-area">
+      <header class="topbar">
+        <button id="menuBtn" class="icon-btn mobile-only" aria-label="Open menu">☰</button>
+        <div>
+          <div class="eyebrow" id="pageEyebrow">IMPERIAL COMMAND</div>
+          <h2 id="pageTitle">Dashboard</h2>
+        </div>
+        <button id="quickMissionBtn" class="btn btn-primary">Today's Orders</button>
+      </header>
+
+      <div id="view" class="view"></div>
+    </main>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <dialog id="modal" class="modal"></dialog>
+
+  <script src="./app.js"></script>
+</body>
+</html>
