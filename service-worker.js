@@ -1,8 +1,10 @@
-const CACHE='vader-mode-v2.1-media-fix';
+const CACHE='vader-mode-v2.2-gallery-audio';
 const ASSETS=[
   './','./index.html','./styles.css','./app.js','./manifest.webmanifest','./icon.svg',
-  './assets/vader-hero.webp','./assets/breathing-vader.webp','./assets/stage-starting.webp',
-  './assets/stage-established.webp','./assets/stage-promotion.webp','./assets/stage-colleagues.webp','./assets/stage-leader.webp','./assets/vader-breath-loop.wav'
+  './assets/vader-command.webp','./assets/vader-army.webp','./assets/vader-smoke.webp',
+  './assets/vader-mask-art.webp','./assets/vader-portrait-red.webp','./assets/vader-closeup.webp',
+  './assets/vader-clouds.webp','./assets/vader-saber-dark.webp','./assets/vader-red-face.webp',
+  './assets/vader-silhouette.webp','./assets/vader-corridor.webp','./assets/vader-breathing-user.mp3'
 ];
 self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS))));
 self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k))))));

@@ -137,17 +137,56 @@
   ];
 
 
-  const HERO_IMAGE = './assets/vader-hero.webp';
-  const BREATHING_IMAGE = './assets/breathing-vader.webp';
-  const TRANSMISSION_IMAGE = './assets/stage-leader.webp';
-  const BREATH_AUDIO = './assets/vader-breath-loop.wav';
+  const HERO_IMAGE = './assets/vader-command.webp';
+  const BREATHING_IMAGE = './assets/vader-closeup.webp';
+  const TRANSMISSION_IMAGE = './assets/vader-corridor.webp';
+  const BREATH_AUDIO = './assets/vader-breathing-user.mp3';
 
   const stageVisuals = {
-    'starting-out': {image:'./assets/stage-starting.webp', kicker:'STAGE I', tagline:'Enter the room prepared. Leave the stormtroopers outside.'},
-    'getting-established': {image:'./assets/stage-established.webp', kicker:'STAGE II', tagline:'Confidence, clarity and negotiation — minus the planetary destruction.'},
-    'seeking-promotion': {image:'./assets/stage-promotion.webp', kicker:'STAGE III', tagline:'Ambition with a plan. Recognition without ominous corridor pacing.'},
-    'working-with-colleagues': {image:'./assets/stage-colleagues.webp', kicker:'STAGE IV', tagline:'Boundaries, delegation and feedback for people who cannot Force-choke HR.'},
-    'becoming-a-leader': {image:'./assets/stage-leader.webp', kicker:'STAGE V', tagline:'Take responsibility. Give credit. Keep the cape out of the machinery.'}
+    'starting-out': {image:'./assets/vader-corridor.webp', kicker:'STAGE I', tagline:'Enter the room prepared. Leave the stormtroopers outside.'},
+    'getting-established': {image:'./assets/vader-closeup.webp', kicker:'STAGE II', tagline:'Confidence, clarity and negotiation — minus the planetary destruction.'},
+    'seeking-promotion': {image:'./assets/vader-smoke.webp', kicker:'STAGE III', tagline:'Ambition with a plan. Recognition without ominous corridor pacing.'},
+    'working-with-colleagues': {image:'./assets/vader-army.webp', kicker:'STAGE IV', tagline:'Boundaries, delegation and feedback for people who cannot Force-choke HR.'},
+    'becoming-a-leader': {image:'./assets/vader-command.webp', kicker:'STAGE V', tagline:'Take responsibility. Give credit. Keep the cape out of the machinery.'}
+  };
+
+  const galleryVisuals = [
+    {src:'./assets/vader-command.webp', title:'Command Presence', caption:'Control the room. Start by controlling yourself.'},
+    {src:'./assets/vader-army.webp', title:'Leadership', caption:'A large team does not reduce the need for clear expectations.'},
+    {src:'./assets/vader-smoke.webp', title:'Conviction', caption:'Make the point. Keep the smoke machine optional.'},
+    {src:'./assets/vader-mask-art.webp', title:'Perspective', caption:'The mask is dramatic. The lesson is self-awareness.'},
+    {src:'./assets/vader-portrait-red.webp', title:'Composure', caption:'Lower the temperature before raising the standard.'},
+    {src:'./assets/vader-closeup.webp', title:'Focus', caption:'Clarity first. Ominous staring is not a deliverable.'},
+    {src:'./assets/vader-clouds.webp', title:'Reset', caption:'Even the Dark Side benefits from recovery.'},
+    {src:'./assets/vader-saber-dark.webp', title:'Boundaries', caption:'Be clear. Be calm. Keep the lightsaber metaphorical.'},
+    {src:'./assets/vader-red-face.webp', title:'Pressure', caption:'Strong emotion is data. It is not always instruction.'},
+    {src:'./assets/vader-silhouette.webp', title:'Discipline', caption:'Consistency beats dramatic bursts of effort.'},
+    {src:'./assets/vader-corridor.webp', title:'Decisiveness', caption:'Walk in knowing the next useful move.'}
+  ];
+
+  const postcardDeck = [
+    {image:0, headline:'CONTROL THE ROOM. START WITH YOURSELF.', lesson:'Regulation first. Command second.'},
+    {image:5, headline:'YOUR CAPE IS NOT A STRATEGY.', lesson:'Presence helps. Preparation helps more.'},
+    {image:4, headline:"DON'T GO FULL VADER BEFORE COFFEE.", lesson:'Pause. Breathe. Then reply.'},
+    {image:1, headline:'DELEGATE. EVEN LORDS OF THE SITH NEED STAFF.', lesson:'If someone else can own it, let them.'},
+    {image:8, headline:'BE IMPOSING. NOT EXHAUSTING.', lesson:'Confidence does not require seventeen uninterrupted minutes.'},
+    {image:10, headline:'A CLEAR REQUEST BEATS AN OMINOUS STARE.', lesson:'Say what you need, why it matters, and when.'},
+    {image:3, headline:"LISTEN. IT'S STRANGELY POWERFUL.", lesson:'Ask one more question before making your point.'},
+    {image:9, headline:'NO NEW WARS TODAY.', lesson:'Finish, decline or defer before adding more.'},
+    {image:6, headline:'REST IS MAINTENANCE, NOT MUTINY.', lesson:'Recovery keeps the command deck online.'},
+    {image:2, headline:'BE FORMIDABLE. REMAIN FUNCTIONAL.', lesson:'The Dark Side is funnier when your judgment stays intact.'}
+  ];
+
+  const screenVisuals = {
+    missions:{image:'./assets/vader-smoke.webp', kicker:'DAILY DEPLOYMENT', title:'One mission. Minimal collateral damage.', copy:'Use the drama for momentum, not for over-complication.'},
+    simulator:{image:'./assets/vader-red-face.webp', kicker:'TACTICAL EXERCISE', title:'Practice the response before the corridor gets tense.', copy:'Spot the theatrical impulse, then choose the useful move.'},
+    coach:{image:'./assets/vader-portrait-red.webp', kicker:'SITUATION ROOM', title:'Bring the problem. Keep the cape.', copy:'Vader instinct acknowledged. Functional-human response recommended.'},
+    checkin:{image:'./assets/vader-closeup.webp', kicker:'HELMET DIAGNOSTIC', title:'Check the systems before issuing orders.', copy:'Awareness is information, not judgment.'},
+    journal:{image:'./assets/vader-mask-art.webp', kicker:'IMPERIAL LOG', title:'Write the lesson, not the trilogy.', copy:'A short debrief turns experience into useful data.'},
+    debrief:{image:'./assets/vader-clouds.webp', kicker:'POWER-DOWN SEQUENCE', title:'Close the day. Release the unnecessary wars.', copy:'One win, one lesson, one mission for tomorrow.'},
+    command:{image:'./assets/vader-army.webp', kicker:'COMMAND CENTRE', title:'Goals need ownership more than atmosphere.', copy:'Define the objective. Clarify the next action. Delegate where sensible.'},
+    wisdom:{image:'./assets/vader-mask-art.webp', kicker:'DARK SIDE WISDOM', title:'Useful thoughts with unnecessary gravitas.', copy:'Keep the quip. Keep the lesson.'},
+    progress:{image:'./assets/vader-silhouette.webp', kicker:'READINESS REPORT', title:'Consistency is the real special effect.', copy:'Track useful behaviour without turning wellness into punishment.'}
   };
 
   const transmissionPool = [
@@ -266,6 +305,7 @@
     ['debrief','☾','Imperial Debrief'],
     ['command','⌘','Command Centre'],
     ['wisdom','❖','Dark Side Wisdom'],
+    ['gallery','▧','Gallery & Postcards'],
     ['progress','▤','Progress & Rank'],
     ['settings','⚙','Settings']
   ];
@@ -283,6 +323,7 @@
     debrief:['END-OF-DAY PROTOCOL','Imperial Debrief'],
     command:['OBJECTIVES & COMMITMENTS','Command Centre'],
     wisdom:['SHORT FORM DOCTRINE','Dark Side Wisdom'],
+    gallery:['VISUAL ARCHIVE','Gallery & Postcards'],
     progress:['READINESS REPORT','Progress & Rank'],
     settings:['LOCAL CONTROL PANEL','Settings']
   };
@@ -347,6 +388,17 @@
     return allLessons[n % allLessons.length];
   }
   function completedPct() { return Math.round((state.completedLessons.length / allLessons.length) * 100); }
+
+
+  function screenBanner(v) {
+    if (!v) return '';
+    return `<section class="screen-banner">
+      <img src="${v.image}" alt="" loading="eager">
+      <div class="screen-banner-shade" aria-hidden="true"></div>
+      <div class="screen-banner-copy"><div class="hero-kicker">${esc(v.kicker)}</div><h3>${esc(v.title)}</h3><p>${esc(v.copy)}</p></div>
+    </section>`;
+  }
+
 
 
   function getAudioContext() {
@@ -484,9 +536,10 @@
       dashboard: renderDashboard, training: renderTraining, missions: renderMissions,
       simulator: renderSimulator, coach: renderCoach, transmissions: renderTransmissions, checkin: renderCheckin, breathing: renderBreathing,
       journal: renderJournal, debrief: renderDebrief, command: renderCommand, wisdom: renderWisdom,
-      progress: renderProgress, settings: renderSettings
+      gallery: renderGallery, progress: renderProgress, settings: renderSettings
     }[currentView];
     fn?.(view);
+    if (screenVisuals[currentView]) view.insertAdjacentHTML('afterbegin', screenBanner(screenVisuals[currentView]));
   }
 
   function renderDashboard(root) {
@@ -498,7 +551,7 @@
     const streak = calculateStreak();
     root.innerHTML = `
       <section class="hero vader-hero">
-        <img class="hero-art" src="${HERO_IMAGE}" alt="Darth Vader imagery from the supplied Be More Vader book scan">
+        <img class="hero-art" src="${HERO_IMAGE}" alt="Darth Vader imagery supplied for this personal-use app">
         <div class="hero-shade" aria-hidden="true"></div>
         <div class="hero-content">
           <div class="hero-kicker">● SYSTEMS ONLINE</div>
@@ -551,6 +604,7 @@
         <article class="card hover" data-go="coach"><div class="mini-label">SITUATION ROOM</div><h4>Vader vs Human Coach</h4><p>Bring a real-life problem. Get the dramatic instinct and the useful response.</p></article>
         <article class="card hover" data-go="breathing"><div class="mini-label">RESET</div><h4>Breathing Chamber</h4><p>Regulate first. Rule nothing. Mechanical breathing included.</p></article>
         <article class="card hover" data-go="debrief"><div class="mini-label">60 SECONDS</div><h4>Imperial Debrief</h4><p>What worked, where you nearly went Full Vader, and tomorrow’s mission.</p></article>
+        <article class="card hover visual-link-card" data-go="gallery"><img src="${galleryVisuals[7].src}" alt=""><div><div class="mini-label">VISUAL ARCHIVE</div><h4>Gallery & Postcards</h4><p>Vader imagery, quippy lessons, and shareable cards for the group chat.</p></div></article>
       </section>
     `;
     document.getElementById('heroMission').onclick = () => navigate('missions');
@@ -694,7 +748,7 @@
     const tx=todayTransmission(); const d=todayKey(); const status=state.transmissions[d]||{};
     root.innerHTML=`
       <section class="transmission-hero">
-        <img class="transmission-art" src="${TRANSMISSION_IMAGE}" alt="Darth Vader leadership imagery from the supplied book scan">
+        <img class="transmission-art" src="${TRANSMISSION_IMAGE}" alt="Darth Vader imagery supplied for this personal-use app">
         <div class="transmission-shade" aria-hidden="true"></div>
         <div class="signal-lines" aria-hidden="true"></div>
         <div class="mini-label">PRIORITY TRANSMISSION // ${esc(tx.dimension)}</div>
@@ -774,11 +828,11 @@
     root.innerHTML = `
       <div class="grid grid-2">
         <article class="card breathing-card">
-          <img class="breathing-image" src="${BREATHING_IMAGE}" alt="Darth Vader image from the supplied Be More Vader book scan">
+          <img class="breathing-image" src="${BREATHING_IMAGE}" alt="Darth Vader imagery supplied for the Breathing Chamber">
           <div class="breathing-content">
             <div class="mini-label">BREATHING CHAMBER // MECHANICAL RESPIRATOR</div>
             <h3>Regulate first. Command second.</h3>
-            <p>Slow breathing gives your nervous system room to choose a response instead of launching one. The chamber now includes a dedicated looped mechanical respirator track designed to sound much closer to the familiar Vader-style inhale/exhale.</p>
+            <p>Slow breathing gives your nervous system room to choose a response instead of launching one. The chamber now uses the Darth Vader breathing track you supplied, looped for the full session.</p>
             <div class="duration-row"><button class="btn btn-small" data-duration="120">2 min</button><button class="btn btn-small" data-duration="300">5 min</button><button class="btn btn-small" data-duration="600">10 min</button></div>
             <div class="breathe-wrap">
               <div id="breatheOrb" class="breathe-orb"><strong id="phaseText">READY</strong></div>
@@ -792,7 +846,7 @@
           <h3>4 · 2 · 6</h3>
           <p><strong>Inhale 4</strong> → hold 2 → <strong>exhale 6</strong>. The respirator ambience is atmosphere, not a command to match its rhythm.</p>
           <hr class="sep" />
-          <div class="mechanical-note"><span class="status-dot"></span><div><strong>Mechanical chamber audio</strong><p>A dedicated original respirator loop plays for the full session. It is not the film recording, but is tuned to the familiar deep inhale/exhale character.</p><div class="row" style="margin-top:10px"><button class="btn btn-small btn-ghost" id="testBreathHere">Test breathing audio</button></div></div></div>
+          <div class="mechanical-note"><span class="status-dot"></span><div><strong>Supplied Vader breathing track</strong><p>Your supplied Darth Vader breathing track plays continuously for the full session. Tap the test button if your browser needs an initial audio gesture.</p><div class="row" style="margin-top:10px"><button class="btn btn-small btn-ghost" id="testBreathHere">Test breathing audio</button></div></div></div>
           <div class="warning card" style="padding:14px;margin-top:14px"><strong>Comfort first.</strong><p>If breath-holding feels unpleasant, skip the hold and breathe normally. This is a simple relaxation tool, not medical treatment.</p></div>
         </article>
       </div>
@@ -916,6 +970,129 @@
     document.getElementById('addWisdom').onclick=()=>{const t=document.getElementById('wisdomText').value.trim();if(!t)return;state.wisdom ||= [];state.wisdom.push({id:crypto.randomUUID(),text:t});saveState();toast('Doctrine added. Try not to form a cult around it.');render();};
   }
 
+
+  function renderGallery(root) {
+    root.innerHTML=`
+      <section class="gallery-hero">
+        <img src="${galleryVisuals[1].src}" alt="Darth Vader and Imperial forces">
+        <div class="gallery-hero-shade" aria-hidden="true"></div>
+        <div class="gallery-hero-copy">
+          <div class="hero-kicker">THE VISUAL ARCHIVE</div>
+          <h3>Gallery, doctrine, and unnecessary levels of gravitas.</h3>
+          <p>Browse the Vader imagery you supplied, then turn it into postcard-style lessons for the group chat.</p>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-head"><div><h3>Imperial Gallery</h3><p>Tap any image for full-screen viewing.</p></div><span class="dimension-pill">${galleryVisuals.length} IMAGES</span></div>
+        <div class="gallery-grid">
+          ${galleryVisuals.map((g,i)=>`<button class="gallery-item no-swipe" data-gallery="${i}" aria-label="Open ${esc(g.title)}">
+            <img src="${g.src}" alt="${esc(g.title)}" loading="lazy">
+            <span class="gallery-item-shade" aria-hidden="true"></span>
+            <span class="gallery-item-copy"><strong>${esc(g.title)}</strong><small>${esc(g.caption)}</small></span>
+          </button>`).join('')}
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-head"><div><h3>Dark Side Postcards</h3><p>Book-style image + quip + useful human lesson. Tap a card to share or save it.</p></div></div>
+        <div class="postcard-grid">
+          ${postcardDeck.map((c,i)=>`<article class="postcard" data-postcard-preview="${i}">
+            <img src="${galleryVisuals[c.image].src}" alt="" loading="lazy">
+            <span class="postcard-shade" aria-hidden="true"></span>
+            <div class="postcard-copy">
+              <span>VADER MODE // ${String(i+1).padStart(2,'0')}</span>
+              <strong>${esc(c.headline)}</strong>
+              <small>${esc(c.lesson)}</small>
+              <button class="btn btn-small postcard-share no-swipe" data-postcard="${i}">Share / save card</button>
+            </div>
+          </article>`).join('')}
+        </div>
+      </section>
+
+      <section class="section card custom-postcard">
+        <div class="mini-label">BUILD YOUR OWN</div>
+        <h3>Imperial Postcard Generator</h3>
+        <p>Pick an image, add a dramatic line, then quietly smuggle in a useful lesson.</p>
+        <div class="grid grid-2">
+          <div>
+            <div class="field"><label>Image</label><select id="customPostcardImage">${galleryVisuals.map((g,i)=>`<option value="${i}">${esc(g.title)}</option>`).join('')}</select></div>
+            <div class="field"><label>Quippy headline</label><input id="customPostcardHeadline" maxlength="100" value="YOUR CAPE IS NOT A STRATEGY."></div>
+            <div class="field"><label>Human lesson</label><textarea id="customPostcardLesson" maxlength="180">Presence helps. Preparation helps more.</textarea></div>
+            <div class="row"><button class="btn btn-primary no-swipe" id="makeCustomPostcard">Share / save postcard</button><button class="btn btn-ghost no-swipe" id="randomPostcard">Surprise me</button></div>
+          </div>
+          <div id="customPostcardPreview" class="custom-postcard-preview"></div>
+        </div>
+      </section>`;
+
+    root.querySelectorAll('[data-gallery]').forEach(b=>b.onclick=()=>openGalleryImage(Number(b.dataset.gallery)));
+    root.querySelectorAll('[data-postcard]').forEach(b=>b.onclick=e=>{e.stopPropagation();sharePostcard(postcardDeck[Number(b.dataset.postcard)]);});
+    root.querySelectorAll('[data-postcard-preview]').forEach(card=>card.onclick=e=>{if(e.target.closest('button'))return;const c=postcardDeck[Number(card.dataset.postcardPreview)];openPostcardPreview(c);});
+    const imageEl=document.getElementById('customPostcardImage'), headEl=document.getElementById('customPostcardHeadline'), lessonEl=document.getElementById('customPostcardLesson');
+    const updatePreview=()=>renderCustomPostcardPreview({image:Number(imageEl.value),headline:headEl.value.trim()||'VADER MODE',lesson:lessonEl.value.trim()||'A useful lesson goes here.'});
+    [imageEl,headEl,lessonEl].forEach(el=>el.addEventListener('input',updatePreview));
+    document.getElementById('makeCustomPostcard').onclick=()=>sharePostcard({image:Number(imageEl.value),headline:headEl.value.trim()||'VADER MODE',lesson:lessonEl.value.trim()||'A useful lesson goes here.'});
+    document.getElementById('randomPostcard').onclick=()=>{
+      const c=postcardDeck[Math.floor(Math.random()*postcardDeck.length)];
+      imageEl.value=c.image;headEl.value=c.headline;lessonEl.value=c.lesson;updatePreview();playNavCue();
+    };
+    updatePreview();
+  }
+
+  function renderCustomPostcardPreview(c) {
+    const target=document.getElementById('customPostcardPreview'); if(!target)return;
+    target.innerHTML=`<div class="postcard postcard-live"><img src="${galleryVisuals[c.image]?.src||HERO_IMAGE}" alt=""><span class="postcard-shade"></span><div class="postcard-copy"><span>VADER MODE // CUSTOM</span><strong>${esc(c.headline)}</strong><small>${esc(c.lesson)}</small></div></div>`;
+  }
+
+  function openGalleryImage(index) {
+    const g=galleryVisuals[index]; if(!g)return;
+    const modal=document.getElementById('modal');
+    modal.innerHTML=`<div class="gallery-modal-wrap"><button class="modal-close gallery-close" id="closeGallery">×</button><img class="gallery-modal-image" src="${g.src}" alt="${esc(g.title)}"><div class="gallery-modal-caption"><div class="mini-label">VISUAL ARCHIVE ${String(index+1).padStart(2,'0')}</div><h3>${esc(g.title)}</h3><p>${esc(g.caption)}</p></div></div>`;
+    modal.showModal();document.getElementById('closeGallery').onclick=()=>modal.close();
+  }
+
+  function openPostcardPreview(c) {
+    const modal=document.getElementById('modal');
+    modal.innerHTML=`<div class="postcard-modal-wrap"><button class="modal-close gallery-close" id="closePostcard">×</button><div class="postcard postcard-modal-card"><img src="${galleryVisuals[c.image].src}" alt=""><span class="postcard-shade"></span><div class="postcard-copy"><span>VADER MODE // DARK SIDE POSTCARD</span><strong>${esc(c.headline)}</strong><small>${esc(c.lesson)}</small></div></div><button class="btn btn-primary" id="sharePostcardModal">Share / save card</button></div>`;
+    modal.showModal();document.getElementById('closePostcard').onclick=()=>modal.close();document.getElementById('sharePostcardModal').onclick=()=>sharePostcard(c);
+  }
+
+  function drawImageCover(ctx,img,x,y,w,h) {
+    const s=Math.max(w/img.width,h/img.height), sw=w/s, sh=h/s, sx=(img.width-sw)/2, sy=(img.height-sh)/2;
+    ctx.drawImage(img,sx,sy,sw,sh,x,y,w,h);
+  }
+  function drawWrapped(ctx,text,x,y,maxWidth,lineHeight,maxLines=6) {
+    const words=String(text).split(/\s+/);let line='',yy=y,lines=0;
+    for(const word of words){
+      const test=line?line+' '+word:word;
+      if(ctx.measureText(test).width>maxWidth&&line){
+        ctx.fillText(line,x,yy);line=word;yy+=lineHeight;lines++;
+        if(lines>=maxLines-1)break;
+      } else line=test;
+    }
+    if(line&&lines<maxLines){ctx.fillText(line,x,yy);yy+=lineHeight;}
+    return yy;
+  }
+  async function sharePostcard(c) {
+    const g=galleryVisuals[c.image]||galleryVisuals[0];
+    const canvas=document.createElement('canvas');canvas.width=1080;canvas.height=1350;const ctx=canvas.getContext('2d');
+    ctx.fillStyle='#07080b';ctx.fillRect(0,0,1080,1350);
+    try{const img=new Image();img.src=g.src;await img.decode();drawImageCover(ctx,img,0,0,1080,1350);}catch{}
+    const grad=ctx.createLinearGradient(0,0,0,1350);grad.addColorStop(0,'rgba(5,6,8,.12)');grad.addColorStop(.44,'rgba(5,6,8,.28)');grad.addColorStop(.70,'rgba(5,6,8,.78)');grad.addColorStop(1,'rgba(5,6,8,.97)');ctx.fillStyle=grad;ctx.fillRect(0,0,1080,1350);
+    ctx.fillStyle='rgba(237,43,58,.96)';ctx.fillRect(66,78,124,10);
+    ctx.fillStyle='#ff9da5';ctx.font='700 26px system-ui, -apple-system, sans-serif';ctx.fillText('VADER MODE // DARK SIDE POSTCARD',66,138);
+    ctx.fillStyle='#ffffff';ctx.font='900 66px system-ui, -apple-system, sans-serif';
+    let yy=drawWrapped(ctx,String(c.headline).toUpperCase(),66,900,940,76,4);
+    ctx.fillStyle='#e6e7ea';ctx.font='500 34px system-ui, -apple-system, sans-serif';yy=drawWrapped(ctx,c.lesson,66,Math.max(1095,yy+28),900,46,3);
+    ctx.fillStyle='#a5a8b0';ctx.font='600 24px system-ui, -apple-system, sans-serif';ctx.fillText('BE FORMIDABLE. REMAIN FUNCTIONAL.',66,1288);
+    const blob=await new Promise(r=>canvas.toBlob(r,'image/png',.95));if(!blob)return;
+    const slug=String(c.headline).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,52)||'postcard';
+    const file=new File([blob],`vader-mode-postcard-${slug}.png`,{type:'image/png'});
+    markActivity('postcard',1);
+    try{if(navigator.canShare?.({files:[file]})){await navigator.share({title:'Vader Mode postcard',text:`${c.headline} — ${c.lesson}`,files:[file]});return;}}catch(e){if(e?.name==='AbortError')return;}
+    const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=file.name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1200);toast('Postcard created.');
+  }
+
   function renderProgress(root) {
     const r=rankInfo();
     const last7=[]; for(let i=6;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);const k=d.toISOString().slice(0,10);last7.push({date:k,score:readiness(state.checkins[k])});}
@@ -953,7 +1130,7 @@
     const canvas=document.createElement('canvas'); canvas.width=1200; canvas.height=675; const ctx=canvas.getContext('2d');
     ctx.fillStyle='#08090b';ctx.fillRect(0,0,1200,675);
     try{
-      const img=new Image(); img.src='./assets/vader-hero.webp'; await img.decode();
+      const img=new Image(); img.src=galleryVisuals[0].src; await img.decode();
       ctx.globalAlpha=.42; ctx.drawImage(img,650,0,550,675); ctx.globalAlpha=1;
     }catch{}
     const grad=ctx.createLinearGradient(0,0,1000,0);grad.addColorStop(0,'#08090b');grad.addColorStop(.62,'rgba(8,9,11,.94)');grad.addColorStop(1,'rgba(8,9,11,.18)');ctx.fillStyle=grad;ctx.fillRect(0,0,1200,675);
@@ -988,7 +1165,7 @@
         <article class="card">
           <div class="mini-label">SOUND & MOTION</div><h3>Cinematic controls</h3>
           <label class="toggle-row"><span><strong>Navigation cue</strong><small>Original two-hit low cinematic cue between sections.</small></span><input id="navSound" type="checkbox" ${state.settings.navSound?'checked':''}></label>
-          <label class="toggle-row"><span><strong>Breathing Chamber audio</strong><small>Synthesized mechanical respirator ambience.</small></span><input id="breathingSound" type="checkbox" ${state.settings.breathingSound?'checked':''}></label>
+          <label class="toggle-row"><span><strong>Breathing Chamber audio</strong><small>Your supplied Darth Vader breathing track, looped during sessions.</small></span><input id="breathingSound" type="checkbox" ${state.settings.breathingSound?'checked':''}></label>
           <label class="toggle-row"><span><strong>Haptics</strong><small>Small vibration on supported devices.</small></span><input id="haptics" type="checkbox" ${state.settings.haptics?'checked':''}></label>
           <div class="field"><label>Sound volume <span id="volLabel">${Math.round((state.settings.volume||0)*100)}%</span></label><input id="volume" type="range" min="0" max="1" step="0.05" value="${state.settings.volume ?? .62}"></div>
           <div class="row"><button class="btn btn-ghost" id="testSound">Test navigation cue</button><button class="btn btn-ghost" id="testBreathSound">Test breathing audio</button></div>
@@ -1003,7 +1180,7 @@
         </article>
       </div>
       <section class="section card warning"><div class="mini-label">DANGER ZONE</div><h3>Reset the Empire</h3><p>Deletes all local progress, logs, goals, check-ins and customization from this browser.</p><button class="btn btn-ghost" id="resetData">Reset all local data</button></section>
-      <section class="section card"><div class="mini-label">ABOUT V2.1</div><p>Personal-use build based on the supplied <em>Be More Vader</em> scan and the wellness framework. Selected imagery from the supplied scan is used as chapter atmosphere. Breathing audio uses a dedicated original loop for reliability on iPhone/Safari; it does not contain a film soundtrack or official recording.</p></section>`;
+      <section class="section card"><div class="mini-label">ABOUT V2.2</div><p>Personal-use build based on the supplied <em>Be More Vader</em> scan and the wellness framework. V2.2 uses the Vader imagery and breathing track you supplied, adds a visual gallery, and creates shareable postcard-style lessons. Audio and image controls remain local to this browser.</p></section>`;
     document.getElementById('saveName').onclick=()=>{state.name=document.getElementById('nameInput').value.trim();saveState();toast('Command profile updated.');};
     ['navSound','breathingSound','haptics'].forEach(id=>document.getElementById(id).onchange=e=>{state.settings[id]=e.target.checked;saveState();});
     document.getElementById('volume').oninput=e=>{state.settings.volume=Number(e.target.value);document.getElementById('volLabel').textContent=`${Math.round(Number(e.target.value)*100)}%`;syncBreathAudioVolume();saveState();};

@@ -1,7 +1,7 @@
 {
   "name": "Vader Mode",
   "short_name": "Vader Mode",
-  "description": "Vader Mode V2 — humorous self-development, reflection and wellness training.",
+  "description": "Vader Mode V2.2 — humorous self-development, reflection, wellness training, Vader gallery and shareable postcards.",
   "start_url": "./",
   "display": "standalone",
   "background_color": "#08090b",

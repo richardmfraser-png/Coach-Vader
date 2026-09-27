@@ -257,7 +257,7 @@ hr.sep { border:0; border-top:1px solid var(--border); margin:18px 0; }
 .vader-hero {
   background-image:
     linear-gradient(90deg, rgba(7,8,11,.97) 0%, rgba(7,8,11,.87) 46%, rgba(7,8,11,.30) 76%, rgba(7,8,11,.14) 100%),
-    url('./assets/vader-hero.webp');
+    url('./assets/vader-command.webp');
   background-size:cover; background-position:center right;
 }
 .vader-hero::after { border-color:rgba(237,43,58,.18); }
@@ -302,7 +302,7 @@ hr.sep { border:0; border-top:1px solid var(--border); margin:18px 0; }
   border:1px solid rgba(237,43,58,.26); border-radius:28px; overflow:hidden; position:relative;
   background:
     linear-gradient(100deg,rgba(7,8,11,.96),rgba(7,8,11,.73),rgba(7,8,11,.25)),
-    url('./assets/stage-leader.webp') center/cover;
+    url('./assets/vader-corridor.webp') center/cover;
 }
 .transmission-hero > * { position:relative; z-index:2; }
 .transmission-hero h3 { font-size:clamp(2.2rem,5vw,4.4rem); margin:12px 0 8px; max-width:760px; letter-spacing:-.05em; }
@@ -313,7 +313,7 @@ hr.sep { border:0; border-top:1px solid var(--border); margin:18px 0; }
 .breathing-card { padding:0; overflow:hidden; position:relative; }
 .breathing-image { height:220px; background:
   linear-gradient(180deg,rgba(7,8,10,.06),rgba(7,8,10,.86)),
-  url('./assets/breathing-vader.webp') center 32%/cover; border-bottom:1px solid var(--border); }
+  url('./assets/vader-closeup.webp') center 32%/cover; border-bottom:1px solid var(--border); }
 .breathing-content { padding:20px; }
 .mechanical-note { display:flex; gap:12px; align-items:flex-start; background:#0b0c10; border:1px solid var(--border); border-radius:14px; padding:14px; }
 .mechanical-note p { margin:4px 0 0; }
@@ -348,7 +348,7 @@ body[data-view="transmissions"] .topbar { border-bottom-color:rgba(237,43,58,.16
   .breathing-image { height:180px; }
 }
 .brand-block { position:relative; overflow:hidden; }
-.brand-block::after { content:""; position:absolute; right:-26px; bottom:-20px; width:116px; height:92px; background:url('./assets/vader-hero.webp') 64% center/cover; opacity:.13; filter:grayscale(1) contrast(1.2); mask-image:linear-gradient(90deg,transparent,#000 35%); pointer-events:none; }
+.brand-block::after { content:""; position:absolute; right:-26px; bottom:-20px; width:116px; height:92px; background:url('./assets/vader-command.webp') 64% center/cover; opacity:.13; filter:grayscale(1) contrast(1.2); mask-image:linear-gradient(90deg,transparent,#000 35%); pointer-events:none; }
 
 /* ===== Vader Mode V2.1 reliability patch: explicit media elements ===== */
 .vader-hero {
@@ -404,4 +404,98 @@ body[data-view="transmissions"] .topbar { border-bottom-color:rgba(237,43,58,.16
   .vader-hero .hero-content { max-width:92%; }
   .breathing-image { height:220px; }
   .stage-cinema-img,.transmission-art { object-position:center; }
+}
+
+/* ===== V2.2: supplied imagery, gallery & postcards ===== */
+.screen-banner,
+.gallery-hero {
+  position:relative;
+  min-height:260px;
+  border:1px solid var(--border);
+  border-radius:22px;
+  overflow:hidden;
+  margin-bottom:22px;
+  background:#050607;
+  box-shadow:0 18px 48px rgba(0,0,0,.28);
+}
+.screen-banner > img,
+.gallery-hero > img {
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+.screen-banner-shade,
+.gallery-hero-shade {
+  position:absolute;
+  inset:0;
+  background:linear-gradient(90deg,rgba(5,6,8,.97) 0%,rgba(5,6,8,.84) 43%,rgba(5,6,8,.28) 77%,rgba(5,6,8,.1) 100%);
+}
+.screen-banner-copy,
+.gallery-hero-copy {
+  position:relative;
+  z-index:2;
+  max-width:680px;
+  padding:36px;
+  display:flex;
+  min-height:260px;
+  flex-direction:column;
+  justify-content:flex-end;
+}
+.screen-banner-copy h3,
+.gallery-hero-copy h3 {font-size:clamp(1.9rem,4vw,3.2rem);line-height:.98;margin:8px 0 12px;}
+.screen-banner-copy p,
+.gallery-hero-copy p {max-width:600px;color:#d0d2d8;font-size:1.02rem;}
+
+.visual-link-card {grid-column:span 2;display:grid;grid-template-columns:minmax(150px,.82fr) 1.5fr;gap:0;padding:0;overflow:hidden;min-height:170px;}
+.visual-link-card img {width:100%;height:100%;min-height:170px;object-fit:cover;}
+.visual-link-card > div {padding:20px;display:flex;flex-direction:column;justify-content:center;}
+
+.gallery-grid {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;}
+.gallery-item {position:relative;min-height:260px;border:1px solid var(--border);border-radius:18px;overflow:hidden;padding:0;background:#08090b;text-align:left;cursor:pointer;color:inherit;box-shadow:0 14px 28px rgba(0,0,0,.18);}
+.gallery-item img {position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .35s ease,filter .35s ease;}
+.gallery-item-shade {position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.04) 20%,rgba(3,4,6,.2) 50%,rgba(3,4,6,.94) 100%);}
+.gallery-item-copy {position:absolute;z-index:2;left:18px;right:18px;bottom:17px;display:flex;flex-direction:column;gap:5px;}
+.gallery-item-copy strong {font-size:1.04rem;}
+.gallery-item-copy small {color:#c6c8cf;line-height:1.35;}
+.gallery-item:hover img {transform:scale(1.035);filter:saturate(1.08) contrast(1.03);}
+
+.postcard-grid {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;}
+.postcard {position:relative;aspect-ratio:4/5;border-radius:18px;overflow:hidden;border:1px solid rgba(255,255,255,.12);background:#07080a;box-shadow:0 18px 36px rgba(0,0,0,.28);cursor:pointer;}
+.postcard img {position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
+.postcard-shade {position:absolute;inset:0;background:linear-gradient(180deg,rgba(4,5,7,.08) 18%,rgba(4,5,7,.16) 42%,rgba(4,5,7,.88) 76%,rgba(4,5,7,.98) 100%);}
+.postcard-copy {position:absolute;z-index:2;inset:0;padding:20px;display:flex;flex-direction:column;justify-content:flex-end;gap:10px;}
+.postcard-copy > span {font-size:.68rem;font-weight:800;letter-spacing:.16em;color:#ff9da5;text-transform:uppercase;}
+.postcard-copy > strong {font-size:clamp(1.25rem,2.4vw,2rem);line-height:.94;letter-spacing:-.03em;text-wrap:balance;}
+.postcard-copy > small {color:#d6d7dc;font-size:.88rem;line-height:1.35;}
+.postcard-share {align-self:flex-start;margin-top:4px;}
+.postcard-live {width:min(100%,360px);margin:0 auto;cursor:default;}
+.custom-postcard {overflow:hidden;}
+.custom-postcard-preview {display:flex;align-items:center;justify-content:center;min-height:480px;padding:10px;border-radius:16px;background:radial-gradient(circle at 50% 40%,rgba(237,43,58,.11),rgba(255,255,255,.02) 48%,transparent 70%);}
+
+.gallery-modal-wrap {position:relative;display:grid;grid-template-columns:minmax(0,1.6fr) minmax(280px,.7fr);background:#08090b;min-height:min(80vh,720px);overflow:hidden;border-radius:20px;}
+.gallery-modal-image {width:100%;height:100%;min-height:520px;object-fit:contain;background:#020304;}
+.gallery-modal-caption {padding:34px;display:flex;flex-direction:column;justify-content:flex-end;}
+.gallery-modal-caption h3 {font-size:2.1rem;margin:8px 0 12px;}
+.gallery-close {position:absolute;right:16px;top:16px;z-index:6;background:rgba(0,0,0,.72);border:1px solid rgba(255,255,255,.18);}
+.postcard-modal-wrap {position:relative;padding:26px;display:flex;flex-direction:column;gap:18px;align-items:center;background:#08090b;}
+.postcard-modal-card {width:min(82vw,520px);cursor:default;}
+
+@media (max-width:980px) {
+  .gallery-grid,.postcard-grid {grid-template-columns:repeat(2,minmax(0,1fr));}
+  .visual-link-card {grid-column:span 1;grid-template-columns:1fr;}
+  .visual-link-card img {height:170px;}
+  .gallery-modal-wrap {grid-template-columns:1fr;}
+  .gallery-modal-image {min-height:360px;max-height:64vh;}
+}
+@media (max-width:640px) {
+  .screen-banner,.gallery-hero {min-height:300px;border-radius:18px;}
+  .screen-banner-shade,.gallery-hero-shade {background:linear-gradient(180deg,rgba(5,6,8,.08) 0%,rgba(5,6,8,.25) 38%,rgba(5,6,8,.96) 78%,#050608 100%);}
+  .screen-banner-copy,.gallery-hero-copy {padding:24px;min-height:300px;}
+  .gallery-grid,.postcard-grid {grid-template-columns:1fr;}
+  .gallery-item {min-height:300px;}
+  .postcard {aspect-ratio:4/5;}
+  .custom-postcard-preview {min-height:420px;}
+  .gallery-modal-caption {padding:22px;}
 }
