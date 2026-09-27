@@ -274,7 +274,7 @@
     dailyDebriefs: {},
     transmissions: {},
     transmissionOffset: 0,
-    settings: {navSound:true, breathingSound:true, haptics:false, volume:0.62, colorTheme:'imperial-red', visualTone:'cinematic', uiBrightness:100, imageBrightness:100, imageSaturation:100, imageContrast:105},
+    settings: {navSound:true, breathingSound:true, haptics:false, volume:0.62, breathPlaybackRate:1.0, colorTheme:'imperial-red', visualTone:'cinematic', uiBrightness:100, imageBrightness:100, imageSaturation:100, imageContrast:105},
     xp: 0
   };
 
@@ -465,10 +465,23 @@
     }
     breathAudio.muted = false;
     breathAudio.volume = Math.max(0, Math.min(1, Number(state.settings?.volume ?? .62)));
+    const rate=Math.max(.6,Math.min(1.4,Number(state.settings?.breathPlaybackRate ?? 1)));
+    breathAudio.playbackRate=rate;
+    try { breathAudio.preservesPitch=true; } catch {}
+    try { breathAudio.webkitPreservesPitch=true; } catch {}
     return breathAudio;
   }
   function syncBreathAudioVolume() {
     if (breathAudio) breathAudio.volume = Math.max(0, Math.min(1, Number(state.settings?.volume ?? .62)));
+  }
+  function syncBreathPlaybackRate() {
+    const rate=Math.max(.6,Math.min(1.4,Number(state.settings?.breathPlaybackRate ?? 1)));
+    if (breathAudio) {
+      breathAudio.playbackRate=rate;
+      try { breathAudio.preservesPitch=true; } catch {}
+      try { breathAudio.webkitPreservesPitch=true; } catch {}
+    }
+    return rate;
   }
   function trackNode(node) { activeAudioNodes.push(node); node.addEventListener?.('ended',()=>{activeAudioNodes=activeAudioNodes.filter(n=>n!==node);}); return node; }
   function trackBreathNode(node) { activeBreathNodes.push(node); node.addEventListener?.('ended',()=>{activeBreathNodes=activeBreathNodes.filter(n=>n!==node);}); return node; }
@@ -880,6 +893,11 @@
             <h3>Regulate first. Command second.</h3>
             <p>Slow breathing gives your nervous system room to choose a response instead of launching one. The chamber uses your original Darth Vader breathing MP3 exactly as supplied — no trimming, gain change or re-encoding — and loops the complete 35+ second track for the full session.</p>
             <div class="duration-row"><button class="btn btn-small" data-duration="120">2 min</button><button class="btn btn-small" data-duration="300">5 min</button><button class="btn btn-small" data-duration="600">10 min</button></div>
+            <div class="field breath-speed-control">
+              <label for="breathSpeed">Breathing track speed <span id="breathSpeedLabel">${Number(state.settings.breathPlaybackRate??1).toFixed(2)}×</span></label>
+              <input id="breathSpeed" type="range" min="0.60" max="1.40" step="0.05" value="${Number(state.settings.breathPlaybackRate??1)}">
+              <div class="space muted" style="font-size:.82rem"><span>Slower</span><span>Original 1.00×</span><span>Faster</span></div>
+            </div>
             <div class="breathe-wrap">
               <div id="breatheOrb" class="breathe-orb"><strong id="phaseText">READY</strong></div>
               <div id="timerText" class="timer">02:00</div>
@@ -892,7 +910,7 @@
           <h3>4 · 2 · 6</h3>
           <p><strong>Inhale 4</strong> → hold 2 → <strong>exhale 6</strong>. The respirator ambience is atmosphere, not a command to match its rhythm.</p>
           <hr class="sep" />
-          <div class="mechanical-note"><span class="status-dot"></span><div><strong>Original supplied Vader breathing track</strong><p>The complete original MP3 plays unchanged and loops continuously for the full session. Nothing has been cut, boosted, filtered or re-encoded.</p><div class="row" style="margin-top:10px"><button class="btn btn-small btn-ghost" id="testBreathHere">Test breathing audio</button></div></div></div>
+          <div class="mechanical-note"><span class="status-dot"></span><div><strong>Original supplied Vader breathing track</strong><p>The complete original MP3 remains untouched and loops continuously for the full session. The speed control changes browser playback rate only; the source file is never edited or re-encoded.</p><div class="row" style="margin-top:10px"><button class="btn btn-small btn-ghost" id="testBreathHere">Test breathing audio</button></div></div></div>
           <div class="warning card" style="padding:14px;margin-top:14px"><strong>Comfort first.</strong><p>If breath-holding feels unpleasant, skip the hold and breathe normally. This is a simple relaxation tool, not medical treatment.</p></div>
         </article>
       </div>
@@ -903,6 +921,13 @@
     document.getElementById('startBreath').onclick=()=>startBreathing(selected);
     document.getElementById('stopBreath').onclick=()=>{clearBreathing(); breathingSeconds=selected; updateTimer(); resetOrb();};
     document.getElementById('breathSoundToggle').onclick=()=>{state.settings.breathingSound=!state.settings.breathingSound;saveState();if(!state.settings.breathingSound)stopMechanicalBreathing();else if(breathingTimer)startMechanicalBreathing();document.getElementById('breathSoundToggle').textContent=`Sound: ${state.settings.breathingSound?'ON':'OFF'}`;};
+    const speed=document.getElementById('breathSpeed');
+    speed.oninput=e=>{
+      state.settings.breathPlaybackRate=Number(e.target.value);
+      document.getElementById('breathSpeedLabel').textContent=`${Number(e.target.value).toFixed(2)}×`;
+      syncBreathPlaybackRate();
+      saveState();
+    };
     document.getElementById('testBreathHere').onclick=()=>testBreathingAudio();
   }
 
@@ -1215,6 +1240,7 @@
           <label class="toggle-row"><span><strong>Breathing Chamber audio</strong><small>Your exact supplied MP3, reconstructed internally and looped without editing.</small></span><input id="breathingSound" type="checkbox" ${s.breathingSound?'checked':''}></label>
           <label class="toggle-row"><span><strong>Haptics</strong><small>Small vibration on supported devices.</small></span><input id="haptics" type="checkbox" ${s.haptics?'checked':''}></label>
           <div class="field"><label>Sound volume <span id="volLabel">${Math.round((s.volume||0)*100)}%</span></label><input id="volume" type="range" min="0" max="1" step="0.05" value="${s.volume ?? .62}"></div>
+          <div class="field"><label>Breathing playback speed <span id="settingsBreathSpeedLabel">${Number(s.breathPlaybackRate??1).toFixed(2)}×</span></label><input id="settingsBreathSpeed" type="range" min="0.60" max="1.40" step="0.05" value="${Number(s.breathPlaybackRate??1)}"></div>
           <div class="row"><button class="btn btn-ghost" id="testSound">Test navigation cue</button><button class="btn btn-primary" id="testBreathSound">Test breathing audio</button></div>
         </article>
         <article class="card display-controls">
@@ -1246,7 +1272,7 @@
           <div class="media-status-row"><span>Images</span><strong id="imageMediaStatus">Checking…</strong></div>
           <div class="media-status-row"><span>Breathing track</span><strong id="audioMediaStatus">Checking…</strong></div>
           <div class="media-status-row"><span>Runtime</span><strong id="runtimeMediaStatus">Checking…</strong></div>
-          <p class="muted">V2.5 reconstructs all images and your original MP3 from bytes embedded inside the app, so broken relative file paths cannot remove the media.</p>
+          <p class="muted">V2.6 keeps all images and your original MP3 embedded inside the app. Playback speed is user-adjustable without altering the source audio file.</p>
           <button class="btn btn-primary" id="runMediaCheck">Run media check</button>
         </article>
         <article class="card">
@@ -1259,10 +1285,11 @@
         </article>
       </div>
       <section class="section card warning"><div class="mini-label">DANGER ZONE</div><h3>Reset the Empire</h3><p>Deletes all local progress, logs, goals, check-ins and customization from this browser.</p><button class="btn btn-ghost" id="resetData">Reset all local data</button></section>
-      <section class="section card"><div class="mini-label">ABOUT V2.5</div><p>Chrome-safe personal build. Vader imagery and the exact supplied breathing MP3 are embedded as direct data URIs, with no Blob URL dependency. Visual template, brightness, tone, saturation and contrast controls are now user-adjustable.</p></section>`;
+      <section class="section card"><div class="mini-label">ABOUT V2.6</div><p>Chrome-safe personal build. Vader imagery and the exact supplied breathing MP3 are embedded as direct data URIs. Breathing playback speed is adjustable from 0.60× to 1.40× while the original MP3 remains untouched. Visual template, brightness, tone, saturation and contrast controls remain user-adjustable.</p></section>`;
     document.getElementById('saveName').onclick=()=>{state.name=document.getElementById('nameInput').value.trim();saveState();toast('Command profile updated.');};
     ['navSound','breathingSound','haptics'].forEach(id=>document.getElementById(id).onchange=e=>{state.settings[id]=e.target.checked;saveState();});
     document.getElementById('volume').oninput=e=>{state.settings.volume=Number(e.target.value);document.getElementById('volLabel').textContent=`${Math.round(Number(e.target.value)*100)}%`;syncBreathAudioVolume();saveState();};
+    document.getElementById('settingsBreathSpeed').oninput=e=>{state.settings.breathPlaybackRate=Number(e.target.value);document.getElementById('settingsBreathSpeedLabel').textContent=`${Number(e.target.value).toFixed(2)}×`;syncBreathPlaybackRate();saveState();};
     const displayIds=['colorTheme','visualTone','uiBrightness','imageBrightness','imageSaturation','imageContrast'];
     displayIds.forEach(id=>document.getElementById(id).oninput=e=>{
       state.settings[id]=(id==='colorTheme'||id==='visualTone')?e.target.value:Number(e.target.value);

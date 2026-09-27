@@ -1,4 +1,4 @@
-const CACHE='vader-mode-v2.5-chrome-safe-data-uri';
+const CACHE='vader-mode-v2.6-playback-speed';
 const ASSETS=[
   './','./index.html','./styles.css','./media.js','./app.js','./manifest.webmanifest','./icon.svg',
   './assets/vader-command.webp','./assets/vader-army.webp','./assets/vader-smoke.webp',
