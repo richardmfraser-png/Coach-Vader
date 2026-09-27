@@ -406,7 +406,7 @@ body[data-view="transmissions"] .topbar { border-bottom-color:rgba(237,43,58,.16
   .stage-cinema-img,.transmission-art { object-position:center; }
 }
 
-/* ===== V2.2: supplied imagery, gallery & postcards ===== */
+/* ===== V2.3: supplied imagery, gallery, postcards & exact audio loop ===== */
 .screen-banner,
 .gallery-hero {
   position:relative;

@@ -1,38 +1,35 @@
-# VADER MODE V2.2 — Gallery + Supplied Audio Build
+# VADER MODE V2.3 — Exact Breathing Audio Loop
 
-V2.2 keeps the wellness / self-development mechanics from V2.1 and adds the Vader imagery and breathing track supplied for this personal-use build.
+This build corrects the breathing-audio treatment from V2.2. The supplied Darth Vader MP3 is now used **exactly as uploaded**.
 
-## What changed
+## Breathing audio correction
 
-- Replaced the earlier book-scan chapter imagery with the newly supplied Vader artwork and stills throughout the app.
-- Added a dedicated **Gallery & Postcards** section with all supplied images.
-- Added 10 ready-made **Dark Side Postcards**: image + quippy headline + useful human lesson.
-- Added an **Imperial Postcard Generator** so you can pick an image and write your own headline/lesson.
-- Postcards can use the device share sheet where supported; otherwise they save as PNG files.
-- The Dashboard, Training, Missions, Simulator, Coach, Helmet Check, Journal, Debrief, Command Centre, Wisdom and Progress areas now use the new imagery.
-- The Breathing Chamber uses the supplied Darth Vader breathing MP3. The track is lightly boosted and trimmed only to improve mobile audibility and looping; the underlying supplied recording is otherwise preserved.
-- **Test breathing audio** remains available in both the Breathing Chamber and Settings.
-- Existing swipe navigation, navigation cue, haptics option, XP, badges, daily missions, Coach, Transmissions and Imperial Debrief are retained.
+- Source file: `Darth Vader Breathing - QuickSounds.com.mp3`
+- App asset: `assets/vader-breathing-original.mp3`
+- Duration: approximately **35.657 seconds**
+- The MP3 is copied byte-for-byte into the app.
+- **No trimming. No volume boost. No filtering. No normalization. No re-encoding.**
+- The browser's native audio loop replays the complete track continuously while the Breathing Chamber timer is running.
+- The app no longer substitutes a synthesized breathing sound if the supplied track is blocked. It instead asks you to open the app in Safari/Chrome and tap Start again.
 
-## Best test sequence
+### Integrity check
 
-1. Open `index.html` from a local web server or host the folder on GitHub Pages.
-2. Confirm the Dashboard hero shows the new Vader imagery.
-3. Open **Gallery & Postcards** and tap several gallery images.
-4. Tap **Share / save card** on a postcard and verify a PNG is created / shared.
-5. Open **Breathing Chamber** and tap **Test breathing audio**.
-6. Tap **Start chamber** and confirm the supplied breathing track loops while the timer runs.
+SHA-256 of the original uploaded MP3 and the packaged app asset:
 
-## GitHub Pages
+`00e1b681b529332cacad7073a61c68d0027e554b70121297ad89b54a293ede44`
 
-Upload the *contents* of this folder to a repository root, preserving the `assets/` folder. Enable GitHub Pages for that branch.
+This confirms that the packaged breathing file is the same file you supplied.
 
-The app is plain HTML/CSS/JavaScript; there is no build step or backend.
+## Everything else retained
 
-## Data
+The V2.2 Vader imagery, Gallery & Postcards, postcard generator, Vader vs Human Coach, Incoming Transmissions, Imperial Debrief, swipe navigation, navigation cue, missions, ranks, badges, journal and wellness features are retained.
 
-Progress remains in browser `localStorage` under the same storage key used by V2/V2.1, so an existing browser profile can carry forward.
+## Test sequence
 
-## Media note
+1. Open `index.html` from a local web server or GitHub Pages.
+2. Go to **Breathing Chamber**.
+3. Tap **Test breathing audio** or **Start chamber**.
+4. Confirm the complete original track is heard.
+5. Let it run beyond 35 seconds to confirm the whole track loops back to the beginning.
 
-This personal-use build contains the Vader images and breathing audio supplied for the project. If the app is ever distributed publicly, re-check the rights for those media assets before publication.
+For the standalone HTML, the same original MP3 bytes are embedded directly in the file as a data URL.

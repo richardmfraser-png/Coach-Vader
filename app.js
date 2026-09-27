@@ -140,7 +140,7 @@
   const HERO_IMAGE = './assets/vader-command.webp';
   const BREATHING_IMAGE = './assets/vader-closeup.webp';
   const TRANSMISSION_IMAGE = './assets/vader-corridor.webp';
-  const BREATH_AUDIO = './assets/vader-breathing-user.mp3';
+  const BREATH_AUDIO = './assets/vader-breathing-original.mp3';
 
   const stageVisuals = {
     'starting-out': {image:'./assets/vader-corridor.webp', kicker:'STAGE I', tagline:'Enter the room prepared. Leave the stormtroopers outside.'},
@@ -479,8 +479,7 @@
     const p=audio.play();
     if (p && typeof p.catch === 'function') {
       p.catch(()=>{
-        startSynthBreathingFallback();
-        toast('Audio was blocked by the preview. Open in Safari/Chrome or tap Start chamber again.');
+        toast('The original breathing track was blocked by this preview. Open in Safari/Chrome and tap Start chamber again.');
       });
     }
   }
@@ -501,7 +500,7 @@
     try { audio.currentTime=0; } catch {}
     const p=audio.play();
     if (p && typeof p.catch === 'function') {
-      p.catch(()=>{ startSynthBreathingFallback(); toast('Audio preview blocked here — try opening the standalone file in Safari/Chrome.'); });
+      p.catch(()=>{ toast('The original breathing track was blocked here — try opening the standalone file in Safari/Chrome.'); });
     }
     breathAudioTestTimer=setTimeout(()=>stopMechanicalBreathing(),6500);
   }
@@ -832,7 +831,7 @@
           <div class="breathing-content">
             <div class="mini-label">BREATHING CHAMBER // MECHANICAL RESPIRATOR</div>
             <h3>Regulate first. Command second.</h3>
-            <p>Slow breathing gives your nervous system room to choose a response instead of launching one. The chamber now uses the Darth Vader breathing track you supplied, looped for the full session.</p>
+            <p>Slow breathing gives your nervous system room to choose a response instead of launching one. The chamber uses your original Darth Vader breathing MP3 exactly as supplied — no trimming, gain change or re-encoding — and loops the complete 35+ second track for the full session.</p>
             <div class="duration-row"><button class="btn btn-small" data-duration="120">2 min</button><button class="btn btn-small" data-duration="300">5 min</button><button class="btn btn-small" data-duration="600">10 min</button></div>
             <div class="breathe-wrap">
               <div id="breatheOrb" class="breathe-orb"><strong id="phaseText">READY</strong></div>
@@ -846,7 +845,7 @@
           <h3>4 · 2 · 6</h3>
           <p><strong>Inhale 4</strong> → hold 2 → <strong>exhale 6</strong>. The respirator ambience is atmosphere, not a command to match its rhythm.</p>
           <hr class="sep" />
-          <div class="mechanical-note"><span class="status-dot"></span><div><strong>Supplied Vader breathing track</strong><p>Your supplied Darth Vader breathing track plays continuously for the full session. Tap the test button if your browser needs an initial audio gesture.</p><div class="row" style="margin-top:10px"><button class="btn btn-small btn-ghost" id="testBreathHere">Test breathing audio</button></div></div></div>
+          <div class="mechanical-note"><span class="status-dot"></span><div><strong>Original supplied Vader breathing track</strong><p>The complete original MP3 plays unchanged and loops continuously for the full session. Nothing has been cut, boosted, filtered or re-encoded.</p><div class="row" style="margin-top:10px"><button class="btn btn-small btn-ghost" id="testBreathHere">Test breathing audio</button></div></div></div>
           <div class="warning card" style="padding:14px;margin-top:14px"><strong>Comfort first.</strong><p>If breath-holding feels unpleasant, skip the hold and breathe normally. This is a simple relaxation tool, not medical treatment.</p></div>
         </article>
       </div>
@@ -1165,7 +1164,7 @@
         <article class="card">
           <div class="mini-label">SOUND & MOTION</div><h3>Cinematic controls</h3>
           <label class="toggle-row"><span><strong>Navigation cue</strong><small>Original two-hit low cinematic cue between sections.</small></span><input id="navSound" type="checkbox" ${state.settings.navSound?'checked':''}></label>
-          <label class="toggle-row"><span><strong>Breathing Chamber audio</strong><small>Your supplied Darth Vader breathing track, looped during sessions.</small></span><input id="breathingSound" type="checkbox" ${state.settings.breathingSound?'checked':''}></label>
+          <label class="toggle-row"><span><strong>Breathing Chamber audio</strong><small>The original supplied MP3, unmodified, looped in full during sessions.</small></span><input id="breathingSound" type="checkbox" ${state.settings.breathingSound?'checked':''}></label>
           <label class="toggle-row"><span><strong>Haptics</strong><small>Small vibration on supported devices.</small></span><input id="haptics" type="checkbox" ${state.settings.haptics?'checked':''}></label>
           <div class="field"><label>Sound volume <span id="volLabel">${Math.round((state.settings.volume||0)*100)}%</span></label><input id="volume" type="range" min="0" max="1" step="0.05" value="${state.settings.volume ?? .62}"></div>
           <div class="row"><button class="btn btn-ghost" id="testSound">Test navigation cue</button><button class="btn btn-ghost" id="testBreathSound">Test breathing audio</button></div>
@@ -1180,7 +1179,7 @@
         </article>
       </div>
       <section class="section card warning"><div class="mini-label">DANGER ZONE</div><h3>Reset the Empire</h3><p>Deletes all local progress, logs, goals, check-ins and customization from this browser.</p><button class="btn btn-ghost" id="resetData">Reset all local data</button></section>
-      <section class="section card"><div class="mini-label">ABOUT V2.2</div><p>Personal-use build based on the supplied <em>Be More Vader</em> scan and the wellness framework. V2.2 uses the Vader imagery and breathing track you supplied, adds a visual gallery, and creates shareable postcard-style lessons. Audio and image controls remain local to this browser.</p></section>`;
+      <section class="section card"><div class="mini-label">ABOUT V2.3</div><p>Personal-use build based on the supplied <em>Be More Vader</em> scan and the wellness framework. V2.3 uses the Vader imagery and your exact, unmodified breathing track, adds a visual gallery, and creates shareable postcard-style lessons. Audio and image controls remain local to this browser.</p></section>`;
     document.getElementById('saveName').onclick=()=>{state.name=document.getElementById('nameInput').value.trim();saveState();toast('Command profile updated.');};
     ['navSound','breathingSound','haptics'].forEach(id=>document.getElementById(id).onchange=e=>{state.settings[id]=e.target.checked;saveState();});
     document.getElementById('volume').oninput=e=>{state.settings.volume=Number(e.target.value);document.getElementById('volLabel').textContent=`${Math.round(Number(e.target.value)*100)}%`;syncBreathAudioVolume();saveState();};
