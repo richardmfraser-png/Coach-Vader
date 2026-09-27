@@ -349,3 +349,59 @@ body[data-view="transmissions"] .topbar { border-bottom-color:rgba(237,43,58,.16
 }
 .brand-block { position:relative; overflow:hidden; }
 .brand-block::after { content:""; position:absolute; right:-26px; bottom:-20px; width:116px; height:92px; background:url('./assets/vader-hero.webp') 64% center/cover; opacity:.13; filter:grayscale(1) contrast(1.2); mask-image:linear-gradient(90deg,transparent,#000 35%); pointer-events:none; }
+
+/* ===== Vader Mode V2.1 reliability patch: explicit media elements ===== */
+.vader-hero {
+  background:
+    linear-gradient(115deg, rgba(237,43,58,.11), transparent 52%),
+    radial-gradient(circle at 87% 20%, rgba(237,43,58,.18), transparent 29%),
+    linear-gradient(145deg,#12141a,#0a0b0f);
+  isolation:isolate;
+}
+.hero-art {
+  position:absolute; z-index:0; inset:0 0 0 auto; width:60%; height:100%;
+  object-fit:cover; object-position:center; display:block; opacity:.92;
+  filter:contrast(1.04) saturate(.94);
+}
+.hero-shade {
+  position:absolute; z-index:1; inset:0;
+  background:linear-gradient(90deg,rgba(7,8,11,.99) 0%,rgba(7,8,11,.94) 42%,rgba(7,8,11,.57) 62%,rgba(7,8,11,.10) 100%);
+  pointer-events:none;
+}
+.vader-hero .hero-content { position:relative; z-index:3; max-width:62%; }
+.vader-hero::after { z-index:2; }
+
+.stage-cinema { background:#0b0c10; isolation:isolate; }
+.stage-cinema-img { position:absolute; z-index:0; inset:0; width:100%; height:100%; object-fit:cover; object-position:center; display:block; }
+.stage-cinema-shade { position:absolute; z-index:1; inset:0; background:linear-gradient(90deg,rgba(5,6,8,.98),rgba(5,6,8,.62) 58%,rgba(5,6,8,.18)); pointer-events:none; }
+.stage-cinema > div:last-child { position:relative; z-index:2; }
+
+.stage-tile { position:relative; isolation:isolate; background:#0b0c10; }
+.stage-tile-img { position:absolute; z-index:0; inset:0; width:100%; height:100%; object-fit:cover; object-position:center; display:block; }
+.stage-tile-shade { position:absolute; z-index:1; inset:0; background:linear-gradient(180deg,rgba(4,5,7,.08) 8%,rgba(4,5,7,.22) 38%,rgba(4,5,7,.96) 100%); }
+.stage-tile-copy { position:relative; z-index:2; display:flex; flex-direction:column; width:100%; }
+.stage-tile-copy > span { color:#ff8a96; font-size:.67rem; font-weight:900; letter-spacing:.11em; }
+.stage-tile-copy strong { margin-top:6px; font-size:1rem; }
+.stage-tile-copy small { margin-top:5px; color:#d7d7db; line-height:1.35; }
+
+.transmission-hero { background:#0b0c10; isolation:isolate; }
+.transmission-art { position:absolute; z-index:0; inset:0; width:100%; height:100%; object-fit:cover; object-position:center; display:block; }
+.transmission-shade { position:absolute; z-index:1; inset:0; background:linear-gradient(100deg,rgba(7,8,11,.98),rgba(7,8,11,.77) 55%,rgba(7,8,11,.22)); pointer-events:none; }
+.transmission-hero > .signal-lines { z-index:2; }
+.transmission-hero > *:not(.transmission-art):not(.transmission-shade):not(.signal-lines) { position:relative; z-index:3; }
+
+.breathing-image { width:100%; height:260px; display:block; object-fit:cover; object-position:center 36%; border-bottom:1px solid var(--border); background:#08090b; }
+
+.lesson-modal-image-wrap { position:relative; height:210px; overflow:hidden; border-radius:22px 22px 0 0; border-bottom:1px solid var(--border); background:#090a0d; }
+.lesson-modal-visual { width:100%; height:100%; display:block; object-fit:cover; object-position:center; border:0; border-radius:0; }
+.lesson-modal-shade { position:absolute; inset:0; background:linear-gradient(90deg,rgba(8,9,11,.16),rgba(8,9,11,.62)); pointer-events:none; }
+
+.media-status-note { font-size:.76rem; color:var(--muted); margin-top:8px; }
+
+@media (max-width: 760px) {
+  .hero-art { width:100%; opacity:.72; object-position:62% center; }
+  .hero-shade { background:linear-gradient(90deg,rgba(7,8,11,.97),rgba(7,8,11,.79) 60%,rgba(7,8,11,.38)); }
+  .vader-hero .hero-content { max-width:92%; }
+  .breathing-image { height:220px; }
+  .stage-cinema-img,.transmission-art { object-position:center; }
+}

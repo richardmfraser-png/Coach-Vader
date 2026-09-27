@@ -137,6 +137,11 @@
   ];
 
 
+  const HERO_IMAGE = './assets/vader-hero.webp';
+  const BREATHING_IMAGE = './assets/breathing-vader.webp';
+  const TRANSMISSION_IMAGE = './assets/stage-leader.webp';
+  const BREATH_AUDIO = './assets/vader-breath-loop.wav';
+
   const stageVisuals = {
     'starting-out': {image:'./assets/stage-starting.webp', kicker:'STAGE I', tagline:'Enter the room prepared. Leave the stormtroopers outside.'},
     'getting-established': {image:'./assets/stage-established.webp', kicker:'STAGE II', tagline:'Confidence, clarity and negotiation — minus the planetary destruction.'},
@@ -240,6 +245,8 @@
   let breathingSeconds = 0;
   let breathPhaseTimer = null;
   let breathAudioTimer = null;
+  let breathAudio = null;
+  let breathAudioTestTimer = null;
   let audioCtx = null;
   let activeAudioNodes = [];
   let activeBreathNodes = [];
@@ -350,6 +357,20 @@
     return audioCtx;
   }
   function masterVolume(mult=1) { return Math.max(0, Math.min(1, Number(state.settings?.volume ?? .62))) * mult; }
+  function getBreathAudio() {
+    if (!breathAudio) {
+      breathAudio = new Audio(BREATH_AUDIO);
+      breathAudio.loop = true;
+      breathAudio.preload = 'auto';
+      breathAudio.setAttribute('playsinline','');
+      breathAudio.setAttribute('webkit-playsinline','');
+    }
+    breathAudio.volume = Math.max(0, Math.min(1, Number(state.settings?.volume ?? .62)));
+    return breathAudio;
+  }
+  function syncBreathAudioVolume() {
+    if (breathAudio) breathAudio.volume = Math.max(0, Math.min(1, Number(state.settings?.volume ?? .62)));
+  }
   function trackNode(node) { activeAudioNodes.push(node); node.addEventListener?.('ended',()=>{activeAudioNodes=activeAudioNodes.filter(n=>n!==node);}); return node; }
   function trackBreathNode(node) { activeBreathNodes.push(node); node.addEventListener?.('ended',()=>{activeBreathNodes=activeBreathNodes.filter(n=>n!==node);}); return node; }
   function stopActiveAudio() {
@@ -393,18 +414,46 @@
     scheduleBreathBurst(ctx,t,.78,520,.22);
     scheduleBreathBurst(ctx,t+1.43,1.18,330,.26);
   }
-  function startMechanicalBreathing() {
-    stopMechanicalBreathing();
+  function startSynthBreathingFallback() {
     if (!state.settings?.breathingSound) return;
     mechanicalBreathPulse();
     breathAudioTimer=setInterval(mechanicalBreathPulse,3200);
   }
+  function startMechanicalBreathing() {
+    stopMechanicalBreathing();
+    if (!state.settings?.breathingSound) return;
+    const audio=getBreathAudio();
+    try { audio.currentTime=0; } catch {}
+    const p=audio.play();
+    if (p && typeof p.catch === 'function') {
+      p.catch(()=>{
+        startSynthBreathingFallback();
+        toast('Audio was blocked by the preview. Open in Safari/Chrome or tap Start chamber again.');
+      });
+    }
+  }
   function stopMechanicalBreathing() {
+    if (breathAudioTestTimer) { clearTimeout(breathAudioTestTimer); breathAudioTestTimer=null; }
+    if (breathAudio) {
+      try { breathAudio.pause(); breathAudio.currentTime=0; } catch {}
+    }
     if (breathAudioTimer) clearInterval(breathAudioTimer);
     breathAudioTimer=null;
     activeBreathNodes.forEach(n=>{try{n.stop?.();}catch{} try{n.disconnect?.();}catch{}});
     activeBreathNodes=[];
   }
+  function testBreathingAudio() {
+    if (!state.settings?.breathingSound) { state.settings.breathingSound=true; saveState(); }
+    stopMechanicalBreathing();
+    const audio=getBreathAudio();
+    try { audio.currentTime=0; } catch {}
+    const p=audio.play();
+    if (p && typeof p.catch === 'function') {
+      p.catch(()=>{ startSynthBreathingFallback(); toast('Audio preview blocked here — try opening the standalone file in Safari/Chrome.'); });
+    }
+    breathAudioTestTimer=setTimeout(()=>stopMechanicalBreathing(),6500);
+  }
+
 
   function renderNav() {
     document.getElementById('nav').innerHTML = navItems.map(([id,icon,label]) => `
@@ -449,6 +498,8 @@
     const streak = calculateStreak();
     root.innerHTML = `
       <section class="hero vader-hero">
+        <img class="hero-art" src="${HERO_IMAGE}" alt="Darth Vader imagery from the supplied Be More Vader book scan">
+        <div class="hero-shade" aria-hidden="true"></div>
         <div class="hero-content">
           <div class="hero-kicker">● SYSTEMS ONLINE</div>
           <h3>Welcome back${name}.</h3>
@@ -512,12 +563,12 @@
     const selected = stage ? stage.lessons : allLessons;
     const visual = stage ? stageVisuals[stage.id] : null;
     root.innerHTML = `
-      ${stage ? `<section class="stage-cinema" style="background-image:linear-gradient(90deg,rgba(5,6,8,.94),rgba(5,6,8,.55),rgba(5,6,8,.18)),url('${visual.image}')"><div><div class="hero-kicker">${visual.kicker}</div><h3>${esc(stage.name)}</h3><p>${esc(visual.tagline)}</p></div></section>` : `<div class="section-head"><div><h3>25 lessons. Five training stages.</h3><p>The book's chapter sequence becomes a practical, humorous self-development curriculum.</p></div><div class="progress-ring" style="--p:${completedPct()}%"><span>${completedPct()}%</span></div></div>`}
+      ${stage ? `<section class="stage-cinema"><img class="stage-cinema-img" src="${visual.image}" alt="${esc(stage.name)} Vader training imagery"><div class="stage-cinema-shade" aria-hidden="true"></div><div><div class="hero-kicker">${visual.kicker}</div><h3>${esc(stage.name)}</h3><p>${esc(visual.tagline)}</p></div></section>` : `<div class="section-head"><div><h3>25 lessons. Five training stages.</h3><p>The book's chapter sequence becomes a practical, humorous self-development curriculum.</p></div><div class="progress-ring" style="--p:${completedPct()}%"><span>${completedPct()}%</span></div></div>`}
       <div class="stage-tabs">
         <button class="stage-btn ${stageFilter==='all'?'active':''}" data-stage="all">All training</button>
         ${stages.map(s=>`<button class="stage-btn ${stageFilter===s.id?'active':''}" data-stage="${s.id}">${s.name}</button>`).join('')}
       </div>
-      ${!stage ? `<div class="stage-gallery">${stages.map(s=>{const v=stageVisuals[s.id];return `<button class="stage-tile" data-stage="${s.id}" style="background-image:linear-gradient(180deg,transparent 10%,rgba(4,5,7,.92)),url('${v.image}')"><span>${v.kicker}</span><strong>${esc(s.name)}</strong><small>${esc(v.tagline)}</small></button>`}).join('')}</div>`:''}
+      ${!stage ? `<div class="stage-gallery">${stages.map(s=>{const v=stageVisuals[s.id];return `<button class="stage-tile" data-stage="${s.id}"><img class="stage-tile-img" src="${v.image}" alt=""><span class="stage-tile-shade" aria-hidden="true"></span><span class="stage-tile-copy"><span>${v.kicker}</span><strong>${esc(s.name)}</strong><small>${esc(v.tagline)}</small></span></button>`}).join('')}</div>`:''}
       <div class="lesson-list">
         ${selected.map(l=>`
           <article class="card hover lesson-card ${state.completedLessons.includes(l.id)?'done':''}" data-lesson="${l.id}">
@@ -643,6 +694,8 @@
     const tx=todayTransmission(); const d=todayKey(); const status=state.transmissions[d]||{};
     root.innerHTML=`
       <section class="transmission-hero">
+        <img class="transmission-art" src="${TRANSMISSION_IMAGE}" alt="Darth Vader leadership imagery from the supplied book scan">
+        <div class="transmission-shade" aria-hidden="true"></div>
         <div class="signal-lines" aria-hidden="true"></div>
         <div class="mini-label">PRIORITY TRANSMISSION // ${esc(tx.dimension)}</div>
         <h3>${esc(tx.title)}</h3><p>${esc(tx.mission)}</p>
@@ -721,11 +774,11 @@
     root.innerHTML = `
       <div class="grid grid-2">
         <article class="card breathing-card">
-          <div class="breathing-image" aria-hidden="true"></div>
+          <img class="breathing-image" src="${BREATHING_IMAGE}" alt="Darth Vader image from the supplied Be More Vader book scan">
           <div class="breathing-content">
             <div class="mini-label">BREATHING CHAMBER // MECHANICAL RESPIRATOR</div>
             <h3>Regulate first. Command second.</h3>
-            <p>Slow breathing gives your nervous system room to choose a response instead of launching one. The chamber now includes an original synthesized mechanical respirator soundscape.</p>
+            <p>Slow breathing gives your nervous system room to choose a response instead of launching one. The chamber now includes a dedicated looped mechanical respirator track designed to sound much closer to the familiar Vader-style inhale/exhale.</p>
             <div class="duration-row"><button class="btn btn-small" data-duration="120">2 min</button><button class="btn btn-small" data-duration="300">5 min</button><button class="btn btn-small" data-duration="600">10 min</button></div>
             <div class="breathe-wrap">
               <div id="breatheOrb" class="breathe-orb"><strong id="phaseText">READY</strong></div>
@@ -739,7 +792,7 @@
           <h3>4 · 2 · 6</h3>
           <p><strong>Inhale 4</strong> → hold 2 → <strong>exhale 6</strong>. The respirator ambience is atmosphere, not a command to match its rhythm.</p>
           <hr class="sep" />
-          <div class="mechanical-note"><span class="status-dot"></span><div><strong>Synthetic chamber audio</strong><p>Generated in your browser from filtered noise and low tones. It is designed to evoke the familiar mechanical respirator feel without using a film recording.</p></div></div>
+          <div class="mechanical-note"><span class="status-dot"></span><div><strong>Mechanical chamber audio</strong><p>A dedicated original respirator loop plays for the full session. It is not the film recording, but is tuned to the familiar deep inhale/exhale character.</p><div class="row" style="margin-top:10px"><button class="btn btn-small btn-ghost" id="testBreathHere">Test breathing audio</button></div></div></div>
           <div class="warning card" style="padding:14px;margin-top:14px"><strong>Comfort first.</strong><p>If breath-holding feels unpleasant, skip the hold and breathe normally. This is a simple relaxation tool, not medical treatment.</p></div>
         </article>
       </div>
@@ -750,6 +803,7 @@
     document.getElementById('startBreath').onclick=()=>startBreathing(selected);
     document.getElementById('stopBreath').onclick=()=>{clearBreathing(); breathingSeconds=selected; updateTimer(); resetOrb();};
     document.getElementById('breathSoundToggle').onclick=()=>{state.settings.breathingSound=!state.settings.breathingSound;saveState();if(!state.settings.breathingSound)stopMechanicalBreathing();else if(breathingTimer)startMechanicalBreathing();document.getElementById('breathSoundToggle').textContent=`Sound: ${state.settings.breathingSound?'ON':'OFF'}`;};
+    document.getElementById('testBreathHere').onclick=()=>testBreathingAudio();
   }
 
   function startBreathing(seconds) {
@@ -937,7 +991,7 @@
           <label class="toggle-row"><span><strong>Breathing Chamber audio</strong><small>Synthesized mechanical respirator ambience.</small></span><input id="breathingSound" type="checkbox" ${state.settings.breathingSound?'checked':''}></label>
           <label class="toggle-row"><span><strong>Haptics</strong><small>Small vibration on supported devices.</small></span><input id="haptics" type="checkbox" ${state.settings.haptics?'checked':''}></label>
           <div class="field"><label>Sound volume <span id="volLabel">${Math.round((state.settings.volume||0)*100)}%</span></label><input id="volume" type="range" min="0" max="1" step="0.05" value="${state.settings.volume ?? .62}"></div>
-          <button class="btn btn-ghost" id="testSound">Test navigation cue</button>
+          <div class="row"><button class="btn btn-ghost" id="testSound">Test navigation cue</button><button class="btn btn-ghost" id="testBreathSound">Test breathing audio</button></div>
         </article>
         <article class="card">
           <div class="mini-label">DATA</div><h3>Your data stays in this browser</h3>
@@ -949,11 +1003,12 @@
         </article>
       </div>
       <section class="section card warning"><div class="mini-label">DANGER ZONE</div><h3>Reset the Empire</h3><p>Deletes all local progress, logs, goals, check-ins and customization from this browser.</p><button class="btn btn-ghost" id="resetData">Reset all local data</button></section>
-      <section class="section card"><div class="mini-label">ABOUT V2</div><p>Personal-use build based on the supplied <em>Be More Vader</em> scan and the wellness framework. Selected imagery from the supplied scan is used as chapter atmosphere. Audio is generated in-browser; it does not contain a film soundtrack or official recording.</p></section>`;
+      <section class="section card"><div class="mini-label">ABOUT V2.1</div><p>Personal-use build based on the supplied <em>Be More Vader</em> scan and the wellness framework. Selected imagery from the supplied scan is used as chapter atmosphere. Breathing audio uses a dedicated original loop for reliability on iPhone/Safari; it does not contain a film soundtrack or official recording.</p></section>`;
     document.getElementById('saveName').onclick=()=>{state.name=document.getElementById('nameInput').value.trim();saveState();toast('Command profile updated.');};
     ['navSound','breathingSound','haptics'].forEach(id=>document.getElementById(id).onchange=e=>{state.settings[id]=e.target.checked;saveState();});
-    document.getElementById('volume').oninput=e=>{state.settings.volume=Number(e.target.value);document.getElementById('volLabel').textContent=`${Math.round(Number(e.target.value)*100)}%`;saveState();};
+    document.getElementById('volume').oninput=e=>{state.settings.volume=Number(e.target.value);document.getElementById('volLabel').textContent=`${Math.round(Number(e.target.value)*100)}%`;syncBreathAudioVolume();saveState();};
     document.getElementById('testSound').onclick=()=>playNavCue();
+    document.getElementById('testBreathSound').onclick=()=>testBreathingAudio();
     document.getElementById('exportData').onclick=()=>{const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`vader-mode-backup-${todayKey()}.json`;a.click();URL.revokeObjectURL(a.href);};
     document.getElementById('importFile').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const raw=JSON.parse(r.result);state={...structuredClone(defaultState),...raw,settings:{...defaultState.settings,...(raw.settings||{})}};saveState();toast('Backup imported.');render();}catch{toast('That backup could not be read.');}};r.readAsText(f);};
     document.getElementById('resetData').onclick=()=>{if(confirm('Reset all Vader Mode data on this browser?')){state=structuredClone(defaultState);saveState();render();toast('Local data reset. The corridor is eerily quiet.');}};
@@ -964,7 +1019,7 @@
     const modal=document.getElementById('modal');
     const done=state.completedLessons.includes(id);
     const stage=stages.find(s=>s.name===l.stageName); const visual=stage?stageVisuals[stage.id]:null;
-    modal.innerHTML=`<div class="lesson-modal-visual" style="background-image:linear-gradient(90deg,rgba(8,9,11,.22),rgba(8,9,11,.82)),url('${visual?.image||'./assets/vader-hero.webp'}')"></div><div class="modal-inner">
+    modal.innerHTML=`<div class="lesson-modal-image-wrap"><img class="lesson-modal-visual" src="${visual?.image||HERO_IMAGE}" alt="Vader training imagery"><span class="lesson-modal-shade" aria-hidden="true"></span></div><div class="modal-inner">
       <div class="modal-head"><div><div class="mini-label">LESSON ${String(l.number).padStart(2,'0')} · ${esc(l.stageName)}</div><h3>${esc(l.title)}</h3></div><button class="modal-close" id="closeModal">×</button></div>
       <div class="modal-block"><h5>VADER → HUMAN</h5><p>${esc(l.translation)}</p></div>
       <div class="modal-block"><h5>YOUR MISSION</h5><p>${esc(l.mission)}</p></div>

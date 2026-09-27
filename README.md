@@ -1,75 +1,49 @@
-# VADER MODE V2
+# VADER MODE V2.1 — Media Fix Build
 
-A private, humorous self-wellness web app inspired by the chapter themes and imagery in the supplied copy of **Be More Vader**.
+This build fixes the two issues reported in V2: Vader imagery not appearing reliably, and the Breathing Chamber sound not being audible on some iPhone / embedded-preview environments.
 
-**Core idea:** notice the dramatic “Vader instinct,” translate it into a useful human response, take one small action, then debrief.
+## What changed
 
-## What V2 adds
+- Important Vader imagery is now rendered as real `<img>` elements rather than depending mainly on CSS background images.
+- Dashboard hero, training-stage cards, selected-stage hero, Incoming Transmission, Breathing Chamber and lesson modals all show explicit imagery from the supplied *Be More Vader* scan.
+- The Breathing Chamber now uses a dedicated original WAV loop (`assets/vader-breath-loop.wav`) rather than relying only on Web Audio synthesis.
+- The WAV is looped for the entire timed session and starts directly from the user's button tap, which is substantially more reliable on iPhone/Safari.
+- A Web Audio synthetic fallback remains available if the media track cannot play.
+- Settings now includes **Test breathing audio** as well as **Test navigation cue**.
+- The Breathing Chamber itself also has a **Test breathing audio** button.
+- The service-worker cache was bumped to `vader-mode-v2.1-media-fix`, so a hosted/PWA version will not keep serving the older V2 media bundle.
 
-- **Imperial Dashboard** with daily mission, readiness, XP, streak and incoming transmission.
-- **25 Vader Training lessons** across the five book stages: Starting Out, Getting Established, Seeking Promotion, Working With Colleagues and Becoming a Leader.
-- **Cinematic chapter skins** using selected imagery extracted from the supplied personal scan.
-- **Vader vs Human Coach**: enter a real situation and get a humorous Vader instinct, a functional-human translation and one next mission. This is an offline rule-based reflection tool, not an AI service.
-- **Incoming Transmission**: rotating small daily challenges with accept/complete tracking.
-- **Mission Simulator** for common workplace and life situations.
-- **Helmet Check** for energy, focus, confidence, calm and patience.
-- **Breathing Chamber** with 2/5/10-minute timers, 4-2-6 pacing, and an original browser-synthesized mechanical respirator ambience designed to evoke the familiar chamber feel. No film audio recording is bundled.
-- **Imperial Log** plus a separate **60-second Imperial Debrief**.
-- **Command Centre** for goals and commitments.
-- **Dark Side Wisdom**, progress tracking, XP, ranks and badges.
-- **Shareable achievement cards** generated as PNG files in the browser; on supported phones the Web Share sheet opens automatically.
-- **Swipe navigation** on touch devices.
-- **Optional two-hit cinematic navigation cue**, volume control and optional haptics.
-- Local-only data storage, JSON backup/import and PWA/offline support.
+## Best way to test on iPhone
 
-## Fastest way to use it
+### Standalone file
+Open `vader-mode-v2_1-standalone.html` in Safari (rather than relying on an in-app document preview). The standalone file contains the imagery, CSS, JavaScript and breathing WAV inside one HTML file.
 
-Open `index.html` from a small local web server, or deploy the whole folder to GitHub Pages.
+1. Open the app.
+2. Confirm the Vader image is visible on Dashboard.
+3. Open **Breathing Chamber** — the Vader image should be visible at the top.
+4. Tap **Test breathing audio**. You should hear a deep mechanical inhale/exhale loop.
+5. Tap **Start chamber**. The loop should continue for the selected 2/5/10 minute session.
+6. Open **Settings** if you want to raise the sound volume.
 
-For the easiest no-server preview, use the separate `vader-mode-v2-standalone.html` file supplied with the package. It contains the CSS, JavaScript and image assets in one file.
+Some document preview surfaces intentionally suppress HTML audio or JavaScript. If a preview is silent, opening the same file in Safari/Chrome is the correct test.
 
-## Run locally
+## GitHub Pages / hosted version
 
-From this folder:
+Upload the entire `vader-mode-v2_1` folder contents together, preserving the `assets/` directory. `index.html` expects:
 
-```bash
-python -m http.server 8000
-```
+- `styles.css`
+- `app.js`
+- `service-worker.js`
+- `manifest.webmanifest`
+- `icon.svg`
+- all files under `assets/`, including `vader-breath-loop.wav`
 
-Then open `http://localhost:8000` in your browser.
-
-## Publish on GitHub Pages
-
-1. Create a new GitHub repository, for example `vader-mode`.
-2. Upload **all files and the `assets` folder** from this package to the repository root.
-3. Commit the files.
-4. Open **Settings → Pages**.
-5. Under **Build and deployment**, select **Deploy from a branch**.
-6. Choose the `main` branch and `/ (root)` folder.
-7. Save. GitHub will provide the public Pages address after deployment.
-
-## Data and privacy
-
-All entries and progress are stored in the browser with `localStorage`. There is no account, cloud database, analytics or external API in this build. Use **Settings → Export JSON** if you want a backup.
+For GitHub Pages, place the folder contents at the repository root and enable Pages from the branch/folder you are publishing.
 
 ## Audio note
 
-The navigation cue and Breathing Chamber audio are generated from Web Audio oscillators and filtered noise. They are original synthesized effects intended to give the app a dark, mechanical, cinematic atmosphere; the package does **not** contain an extracted Star Wars soundtrack, score, voice clip or Darth Vader breathing recording.
+The breathing track is an original synthetic mechanical respirator loop designed to evoke the familiar Vader-style inhale/exhale. It is not copied from a Star Wars film soundtrack or official recording.
 
-## Image note
+## Data
 
-The V2 chapter/atmosphere images were extracted from the *Be More Vader* scan supplied for this private build. If the app is ever distributed publicly or commercially, replace those images and review the branding/IP position first.
-
-## Files
-
-- `index.html` — app shell
-- `styles.css` — interface and cinematic styling
-- `app.js` — all app logic and content
-- `assets/` — the seven selected visual assets
-- `manifest.webmanifest` — installable web-app metadata
-- `service-worker.js` — offline cache
-- `icon.svg` — simple app icon
-
-## Technical notes
-
-No build step, package manager or server-side component is required. The app is plain HTML/CSS/JavaScript and is designed for modern Safari, Chrome and Edge browsers.
+As before, user progress is stored only in browser `localStorage`. V2.1 keeps the same storage key so existing local V2 progress can carry forward.

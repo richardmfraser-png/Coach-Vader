@@ -1,8 +1,8 @@
-const CACHE='vader-mode-v2';
+const CACHE='vader-mode-v2.1-media-fix';
 const ASSETS=[
   './','./index.html','./styles.css','./app.js','./manifest.webmanifest','./icon.svg',
   './assets/vader-hero.webp','./assets/breathing-vader.webp','./assets/stage-starting.webp',
-  './assets/stage-established.webp','./assets/stage-promotion.webp','./assets/stage-colleagues.webp','./assets/stage-leader.webp'
+  './assets/stage-established.webp','./assets/stage-promotion.webp','./assets/stage-colleagues.webp','./assets/stage-leader.webp','./assets/vader-breath-loop.wav'
 ];
 self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS))));
 self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k))))));
