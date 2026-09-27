@@ -1,35 +1,30 @@
-# VADER MODE V2.3 — Exact Breathing Audio Loop
+# VADER MODE V2.4 — Media-Resilient Build
 
-This build corrects the breathing-audio treatment from V2.2. The supplied Darth Vader MP3 is now used **exactly as uploaded**.
+This build fixes the media-loading issue by embedding every Vader image and the original breathing MP3 inside `media.js`, then reconstructing them as local Blob URLs at runtime. The visible app no longer depends on relative image/audio paths.
 
-## Breathing audio correction
+## What changed
+- 11 Vader images embedded in the application and reconstructed locally.
+- Exact original breathing MP3 embedded byte-for-byte; no trimming, gain change, filtering, or re-encoding.
+- Native full-track looping during Breathing Chamber sessions.
+- Built-in **Media Check** in Settings reports image load count and breathing-track readiness.
+- New display controls: colour template, visual tone, overall brightness, image brightness, saturation, and contrast.
+- Five colour templates: Imperial Red, Mustafar Ember, Bespin Blue, Carbon Monochrome, Sith Neon.
 
-- Source file: `Darth Vader Breathing - QuickSounds.com.mp3`
-- App asset: `assets/vader-breathing-original.mp3`
-- Duration: approximately **35.657 seconds**
-- The MP3 is copied byte-for-byte into the app.
-- **No trimming. No volume boost. No filtering. No normalization. No re-encoding.**
-- The browser's native audio loop replays the complete track continuously while the Breathing Chamber timer is running.
-- The app no longer substitutes a synthesized breathing sound if the supplied track is blocked. It instead asks you to open the app in Safari/Chrome and tap Start again.
-
-### Integrity check
-
-SHA-256 of the original uploaded MP3 and the packaged app asset:
-
+## Audio integrity
+Original supplied MP3 SHA-256:
 `00e1b681b529332cacad7073a61c68d0027e554b70121297ad89b54a293ede44`
 
-This confirms that the packaged breathing file is the same file you supplied.
+Packaged V2.4 MP3 SHA-256:
+`00e1b681b529332cacad7073a61c68d0027e554b70121297ad89b54a293ede44`
 
-## Everything else retained
+These are identical.
 
-The V2.2 Vader imagery, Gallery & Postcards, postcard generator, Vader vs Human Coach, Incoming Transmissions, Imperial Debrief, swipe navigation, navigation cue, missions, ranks, badges, journal and wellness features are retained.
+## Testing
+1. Open `index.html` through a normal web server (GitHub Pages is ideal), or use the standalone HTML.
+2. Open **Settings** → **Media Check** → **Run media check**.
+3. It should report `11/11 loaded` and `Ready • ~35.7 sec`.
+4. Tap **Test breathing audio**. User interaction is required by mobile browsers before audio can play.
+5. Open **Gallery & Postcards** and confirm the imagery loads throughout.
 
-## Test sequence
-
-1. Open `index.html` from a local web server or GitHub Pages.
-2. Go to **Breathing Chamber**.
-3. Tap **Test breathing audio** or **Start chamber**.
-4. Confirm the complete original track is heard.
-5. Let it run beyond 35 seconds to confirm the whole track loops back to the beginning.
-
-For the standalone HTML, the same original MP3 bytes are embedded directly in the file as a data URL.
+## Hosting
+This remains a static application. Upload the whole folder to GitHub Pages, Netlify, Cloudflare Pages, or any ordinary web host. No backend is required.

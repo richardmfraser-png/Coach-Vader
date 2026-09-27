@@ -2,6 +2,7 @@
   'use strict';
 
   const STORAGE_KEY = 'vaderMode.v1';
+  const media = (name) => window.VaderMedia?.url(name) || `./assets/${String(name).split('/').pop()}`;
   const todayKey = () => new Date().toISOString().slice(0,10);
 
   const stages = [
@@ -137,31 +138,31 @@
   ];
 
 
-  const HERO_IMAGE = './assets/vader-command.webp';
-  const BREATHING_IMAGE = './assets/vader-closeup.webp';
-  const TRANSMISSION_IMAGE = './assets/vader-corridor.webp';
-  const BREATH_AUDIO = './assets/vader-breathing-original.mp3';
+  const HERO_IMAGE = media('vader-command.webp');
+  const BREATHING_IMAGE = media('vader-closeup.webp');
+  const TRANSMISSION_IMAGE = media('vader-corridor.webp');
+  const BREATH_AUDIO = media('vader-breathing-original.mp3');
 
   const stageVisuals = {
-    'starting-out': {image:'./assets/vader-corridor.webp', kicker:'STAGE I', tagline:'Enter the room prepared. Leave the stormtroopers outside.'},
-    'getting-established': {image:'./assets/vader-closeup.webp', kicker:'STAGE II', tagline:'Confidence, clarity and negotiation — minus the planetary destruction.'},
-    'seeking-promotion': {image:'./assets/vader-smoke.webp', kicker:'STAGE III', tagline:'Ambition with a plan. Recognition without ominous corridor pacing.'},
-    'working-with-colleagues': {image:'./assets/vader-army.webp', kicker:'STAGE IV', tagline:'Boundaries, delegation and feedback for people who cannot Force-choke HR.'},
-    'becoming-a-leader': {image:'./assets/vader-command.webp', kicker:'STAGE V', tagline:'Take responsibility. Give credit. Keep the cape out of the machinery.'}
+    'starting-out': {image:media('vader-corridor.webp'), kicker:'STAGE I', tagline:'Enter the room prepared. Leave the stormtroopers outside.'},
+    'getting-established': {image:media('vader-closeup.webp'), kicker:'STAGE II', tagline:'Confidence, clarity and negotiation — minus the planetary destruction.'},
+    'seeking-promotion': {image:media('vader-smoke.webp'), kicker:'STAGE III', tagline:'Ambition with a plan. Recognition without ominous corridor pacing.'},
+    'working-with-colleagues': {image:media('vader-army.webp'), kicker:'STAGE IV', tagline:'Boundaries, delegation and feedback for people who cannot Force-choke HR.'},
+    'becoming-a-leader': {image:media('vader-command.webp'), kicker:'STAGE V', tagline:'Take responsibility. Give credit. Keep the cape out of the machinery.'}
   };
 
   const galleryVisuals = [
-    {src:'./assets/vader-command.webp', title:'Command Presence', caption:'Control the room. Start by controlling yourself.'},
-    {src:'./assets/vader-army.webp', title:'Leadership', caption:'A large team does not reduce the need for clear expectations.'},
-    {src:'./assets/vader-smoke.webp', title:'Conviction', caption:'Make the point. Keep the smoke machine optional.'},
-    {src:'./assets/vader-mask-art.webp', title:'Perspective', caption:'The mask is dramatic. The lesson is self-awareness.'},
-    {src:'./assets/vader-portrait-red.webp', title:'Composure', caption:'Lower the temperature before raising the standard.'},
-    {src:'./assets/vader-closeup.webp', title:'Focus', caption:'Clarity first. Ominous staring is not a deliverable.'},
-    {src:'./assets/vader-clouds.webp', title:'Reset', caption:'Even the Dark Side benefits from recovery.'},
-    {src:'./assets/vader-saber-dark.webp', title:'Boundaries', caption:'Be clear. Be calm. Keep the lightsaber metaphorical.'},
-    {src:'./assets/vader-red-face.webp', title:'Pressure', caption:'Strong emotion is data. It is not always instruction.'},
-    {src:'./assets/vader-silhouette.webp', title:'Discipline', caption:'Consistency beats dramatic bursts of effort.'},
-    {src:'./assets/vader-corridor.webp', title:'Decisiveness', caption:'Walk in knowing the next useful move.'}
+    {src:media('vader-command.webp'), title:'Command Presence', caption:'Control the room. Start by controlling yourself.'},
+    {src:media('vader-army.webp'), title:'Leadership', caption:'A large team does not reduce the need for clear expectations.'},
+    {src:media('vader-smoke.webp'), title:'Conviction', caption:'Make the point. Keep the smoke machine optional.'},
+    {src:media('vader-mask-art.webp'), title:'Perspective', caption:'The mask is dramatic. The lesson is self-awareness.'},
+    {src:media('vader-portrait-red.webp'), title:'Composure', caption:'Lower the temperature before raising the standard.'},
+    {src:media('vader-closeup.webp'), title:'Focus', caption:'Clarity first. Ominous staring is not a deliverable.'},
+    {src:media('vader-clouds.webp'), title:'Reset', caption:'Even the Dark Side benefits from recovery.'},
+    {src:media('vader-saber-dark.webp'), title:'Boundaries', caption:'Be clear. Be calm. Keep the lightsaber metaphorical.'},
+    {src:media('vader-red-face.webp'), title:'Pressure', caption:'Strong emotion is data. It is not always instruction.'},
+    {src:media('vader-silhouette.webp'), title:'Discipline', caption:'Consistency beats dramatic bursts of effort.'},
+    {src:media('vader-corridor.webp'), title:'Decisiveness', caption:'Walk in knowing the next useful move.'}
   ];
 
   const postcardDeck = [
@@ -178,15 +179,15 @@
   ];
 
   const screenVisuals = {
-    missions:{image:'./assets/vader-smoke.webp', kicker:'DAILY DEPLOYMENT', title:'One mission. Minimal collateral damage.', copy:'Use the drama for momentum, not for over-complication.'},
-    simulator:{image:'./assets/vader-red-face.webp', kicker:'TACTICAL EXERCISE', title:'Practice the response before the corridor gets tense.', copy:'Spot the theatrical impulse, then choose the useful move.'},
-    coach:{image:'./assets/vader-portrait-red.webp', kicker:'SITUATION ROOM', title:'Bring the problem. Keep the cape.', copy:'Vader instinct acknowledged. Functional-human response recommended.'},
-    checkin:{image:'./assets/vader-closeup.webp', kicker:'HELMET DIAGNOSTIC', title:'Check the systems before issuing orders.', copy:'Awareness is information, not judgment.'},
-    journal:{image:'./assets/vader-mask-art.webp', kicker:'IMPERIAL LOG', title:'Write the lesson, not the trilogy.', copy:'A short debrief turns experience into useful data.'},
-    debrief:{image:'./assets/vader-clouds.webp', kicker:'POWER-DOWN SEQUENCE', title:'Close the day. Release the unnecessary wars.', copy:'One win, one lesson, one mission for tomorrow.'},
-    command:{image:'./assets/vader-army.webp', kicker:'COMMAND CENTRE', title:'Goals need ownership more than atmosphere.', copy:'Define the objective. Clarify the next action. Delegate where sensible.'},
-    wisdom:{image:'./assets/vader-mask-art.webp', kicker:'DARK SIDE WISDOM', title:'Useful thoughts with unnecessary gravitas.', copy:'Keep the quip. Keep the lesson.'},
-    progress:{image:'./assets/vader-silhouette.webp', kicker:'READINESS REPORT', title:'Consistency is the real special effect.', copy:'Track useful behaviour without turning wellness into punishment.'}
+    missions:{image:media('vader-smoke.webp'), kicker:'DAILY DEPLOYMENT', title:'One mission. Minimal collateral damage.', copy:'Use the drama for momentum, not for over-complication.'},
+    simulator:{image:media('vader-red-face.webp'), kicker:'TACTICAL EXERCISE', title:'Practice the response before the corridor gets tense.', copy:'Spot the theatrical impulse, then choose the useful move.'},
+    coach:{image:media('vader-portrait-red.webp'), kicker:'SITUATION ROOM', title:'Bring the problem. Keep the cape.', copy:'Vader instinct acknowledged. Functional-human response recommended.'},
+    checkin:{image:media('vader-closeup.webp'), kicker:'HELMET DIAGNOSTIC', title:'Check the systems before issuing orders.', copy:'Awareness is information, not judgment.'},
+    journal:{image:media('vader-mask-art.webp'), kicker:'IMPERIAL LOG', title:'Write the lesson, not the trilogy.', copy:'A short debrief turns experience into useful data.'},
+    debrief:{image:media('vader-clouds.webp'), kicker:'POWER-DOWN SEQUENCE', title:'Close the day. Release the unnecessary wars.', copy:'One win, one lesson, one mission for tomorrow.'},
+    command:{image:media('vader-army.webp'), kicker:'COMMAND CENTRE', title:'Goals need ownership more than atmosphere.', copy:'Define the objective. Clarify the next action. Delegate where sensible.'},
+    wisdom:{image:media('vader-mask-art.webp'), kicker:'DARK SIDE WISDOM', title:'Useful thoughts with unnecessary gravitas.', copy:'Keep the quip. Keep the lesson.'},
+    progress:{image:media('vader-silhouette.webp'), kicker:'READINESS REPORT', title:'Consistency is the real special effect.', copy:'Track useful behaviour without turning wellness into punishment.'}
   };
 
   const transmissionPool = [
@@ -273,7 +274,7 @@
     dailyDebriefs: {},
     transmissions: {},
     transmissionOffset: 0,
-    settings: {navSound:true, breathingSound:true, haptics:false, volume:0.62},
+    settings: {navSound:true, breathingSound:true, haptics:false, volume:0.62, colorTheme:'imperial-red', visualTone:'cinematic', uiBrightness:100, imageBrightness:100, imageSaturation:100, imageContrast:105},
     xp: 0
   };
 
@@ -344,6 +345,40 @@
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     updateRankUI();
   }
+  function applyDisplaySettings() {
+    const s=state.settings||{};
+    const root=document.documentElement;
+    const allowedThemes=['imperial-red','mustafar','bespin-blue','carbon','sith-neon'];
+    const theme=allowedThemes.includes(s.colorTheme)?s.colorTheme:'imperial-red';
+    root.dataset.theme=theme;
+    const ui=Math.max(70,Math.min(130,Number(s.uiBrightness ?? 100)));
+    const light=Math.max(0,(ui-100)/100*.34);
+    const dark=Math.max(0,(100-ui)/100*.5);
+    root.style.setProperty('--ui-light-alpha',light.toFixed(3));
+    root.style.setProperty('--ui-dark-alpha',dark.toFixed(3));
+    root.style.setProperty('--image-brightness',`${Math.max(60,Math.min(150,Number(s.imageBrightness ?? 100)))}%`);
+    root.style.setProperty('--image-saturation',`${Math.max(0,Math.min(180,Number(s.imageSaturation ?? 100)))}%`);
+    root.style.setProperty('--image-contrast',`${Math.max(60,Math.min(170,Number(s.imageContrast ?? 105)))}%`);
+    const tone=s.visualTone||'cinematic';
+    const tones={
+      neutral:{gray:0,sepia:0,hue:0},
+      cinematic:{gray:0,sepia:.04,hue:-2},
+      warm:{gray:0,sepia:.16,hue:-8},
+      cool:{gray:0,sepia:.08,hue:16},
+      mono:{gray:1,sepia:0,hue:0}
+    };
+    const t=tones[tone]||tones.cinematic;
+    root.style.setProperty('--image-grayscale',t.gray);
+    root.style.setProperty('--image-sepia',t.sepia);
+    root.style.setProperty('--image-hue',`${t.hue}deg`);
+    root.style.setProperty('--hero-media',`url("${HERO_IMAGE}")`);
+    root.style.setProperty('--corridor-media',`url("${TRANSMISSION_IMAGE}")`);
+    root.style.setProperty('--breathing-media',`url("${BREATHING_IMAGE}")`);
+  }
+  function resetDisplaySettings() {
+    Object.assign(state.settings,{colorTheme:'imperial-red',visualTone:'cinematic',uiBrightness:100,imageBrightness:100,imageSaturation:100,imageContrast:105});
+    saveState(); applyDisplaySettings();
+  }
   function esc(s='') { return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c])); }
   function toast(msg) {
     const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show');
@@ -411,11 +446,13 @@
   function masterVolume(mult=1) { return Math.max(0, Math.min(1, Number(state.settings?.volume ?? .62))) * mult; }
   function getBreathAudio() {
     if (!breathAudio) {
-      breathAudio = new Audio(BREATH_AUDIO);
+      breathAudio = new Audio();
       breathAudio.loop = true;
       breathAudio.preload = 'auto';
       breathAudio.setAttribute('playsinline','');
       breathAudio.setAttribute('webkit-playsinline','');
+      breathAudio.src = BREATH_AUDIO;
+      try { breathAudio.load(); } catch {}
     }
     breathAudio.volume = Math.max(0, Math.min(1, Number(state.settings?.volume ?? .62)));
     return breathAudio;
@@ -1154,6 +1191,7 @@
   }
 
   function renderSettings(root) {
+    const s=state.settings||{};
     root.innerHTML=`
       <div class="grid grid-2">
         <article class="card">
@@ -1163,15 +1201,46 @@
         </article>
         <article class="card">
           <div class="mini-label">SOUND & MOTION</div><h3>Cinematic controls</h3>
-          <label class="toggle-row"><span><strong>Navigation cue</strong><small>Original two-hit low cinematic cue between sections.</small></span><input id="navSound" type="checkbox" ${state.settings.navSound?'checked':''}></label>
-          <label class="toggle-row"><span><strong>Breathing Chamber audio</strong><small>The original supplied MP3, unmodified, looped in full during sessions.</small></span><input id="breathingSound" type="checkbox" ${state.settings.breathingSound?'checked':''}></label>
-          <label class="toggle-row"><span><strong>Haptics</strong><small>Small vibration on supported devices.</small></span><input id="haptics" type="checkbox" ${state.settings.haptics?'checked':''}></label>
-          <div class="field"><label>Sound volume <span id="volLabel">${Math.round((state.settings.volume||0)*100)}%</span></label><input id="volume" type="range" min="0" max="1" step="0.05" value="${state.settings.volume ?? .62}"></div>
-          <div class="row"><button class="btn btn-ghost" id="testSound">Test navigation cue</button><button class="btn btn-ghost" id="testBreathSound">Test breathing audio</button></div>
+          <label class="toggle-row"><span><strong>Navigation cue</strong><small>Original two-hit low cinematic cue between sections.</small></span><input id="navSound" type="checkbox" ${s.navSound?'checked':''}></label>
+          <label class="toggle-row"><span><strong>Breathing Chamber audio</strong><small>Your exact supplied MP3, reconstructed internally and looped without editing.</small></span><input id="breathingSound" type="checkbox" ${s.breathingSound?'checked':''}></label>
+          <label class="toggle-row"><span><strong>Haptics</strong><small>Small vibration on supported devices.</small></span><input id="haptics" type="checkbox" ${s.haptics?'checked':''}></label>
+          <div class="field"><label>Sound volume <span id="volLabel">${Math.round((s.volume||0)*100)}%</span></label><input id="volume" type="range" min="0" max="1" step="0.05" value="${s.volume ?? .62}"></div>
+          <div class="row"><button class="btn btn-ghost" id="testSound">Test navigation cue</button><button class="btn btn-primary" id="testBreathSound">Test breathing audio</button></div>
+        </article>
+        <article class="card display-controls">
+          <div class="mini-label">COLOUR & DISPLAY</div><h3>Tune the command deck</h3>
+          <div class="field"><label>Colour template</label><select id="colorTheme">
+            <option value="imperial-red" ${s.colorTheme==='imperial-red'?'selected':''}>Imperial Red</option>
+            <option value="mustafar" ${s.colorTheme==='mustafar'?'selected':''}>Mustafar Ember</option>
+            <option value="bespin-blue" ${s.colorTheme==='bespin-blue'?'selected':''}>Bespin Blue</option>
+            <option value="carbon" ${s.colorTheme==='carbon'?'selected':''}>Carbon Monochrome</option>
+            <option value="sith-neon" ${s.colorTheme==='sith-neon'?'selected':''}>Sith Neon</option>
+          </select></div>
+          <div class="theme-swatches"><span class="swatch imperial"></span><span class="swatch mustafar"></span><span class="swatch bespin"></span><span class="swatch carbon"></span><span class="swatch neon"></span></div>
+          <div class="field"><label>Image tone</label><select id="visualTone">
+            <option value="neutral" ${s.visualTone==='neutral'?'selected':''}>Neutral</option>
+            <option value="cinematic" ${s.visualTone==='cinematic'?'selected':''}>Cinematic</option>
+            <option value="warm" ${s.visualTone==='warm'?'selected':''}>Warm</option>
+            <option value="cool" ${s.visualTone==='cool'?'selected':''}>Cool</option>
+            <option value="mono" ${s.visualTone==='mono'?'selected':''}>Monochrome</option>
+          </select></div>
+          <div class="field"><label>Overall brightness <span id="uiBrightnessLabel">${Number(s.uiBrightness??100)}%</span></label><input id="uiBrightness" type="range" min="70" max="130" step="1" value="${Number(s.uiBrightness??100)}"></div>
+          <div class="field"><label>Image brightness <span id="imageBrightnessLabel">${Number(s.imageBrightness??100)}%</span></label><input id="imageBrightness" type="range" min="60" max="150" step="1" value="${Number(s.imageBrightness??100)}"></div>
+          <div class="field"><label>Image saturation <span id="imageSaturationLabel">${Number(s.imageSaturation??100)}%</span></label><input id="imageSaturation" type="range" min="0" max="180" step="1" value="${Number(s.imageSaturation??100)}"></div>
+          <div class="field"><label>Image contrast <span id="imageContrastLabel">${Number(s.imageContrast??105)}%</span></label><input id="imageContrast" type="range" min="60" max="170" step="1" value="${Number(s.imageContrast??105)}"></div>
+          <button class="btn btn-ghost" id="resetDisplay">Reset visual settings</button>
+        </article>
+        <article class="card media-diagnostic-card">
+          <div class="mini-label">MEDIA CHECK</div><h3>Built-in media diagnostics</h3>
+          <div class="media-check-preview"><img id="mediaCheckImage" src="${HERO_IMAGE}" alt="Vader media test"></div>
+          <div class="media-status-row"><span>Images</span><strong id="imageMediaStatus">Checking…</strong></div>
+          <div class="media-status-row"><span>Breathing track</span><strong id="audioMediaStatus">Checking…</strong></div>
+          <p class="muted">V2.4 reconstructs all images and your original MP3 from bytes embedded inside the app, so broken relative file paths cannot remove the media.</p>
+          <button class="btn btn-primary" id="runMediaCheck">Run media check</button>
         </article>
         <article class="card">
           <div class="mini-label">DATA</div><h3>Your data stays in this browser</h3>
-          <p>Version 2 still uses localStorage only. Export a backup if you want to move devices.</p>
+          <p>Vader Mode uses localStorage only. Export a backup if you want to move devices.</p>
           <div class="row"><button class="btn" id="exportData">Export JSON</button><label class="btn btn-ghost" for="importFile">Import JSON</label><input id="importFile" type="file" accept="application/json" hidden></div>
         </article>
         <article class="card">
@@ -1179,15 +1248,55 @@
         </article>
       </div>
       <section class="section card warning"><div class="mini-label">DANGER ZONE</div><h3>Reset the Empire</h3><p>Deletes all local progress, logs, goals, check-ins and customization from this browser.</p><button class="btn btn-ghost" id="resetData">Reset all local data</button></section>
-      <section class="section card"><div class="mini-label">ABOUT V2.3</div><p>Personal-use build based on the supplied <em>Be More Vader</em> scan and the wellness framework. V2.3 uses the Vader imagery and your exact, unmodified breathing track, adds a visual gallery, and creates shareable postcard-style lessons. Audio and image controls remain local to this browser.</p></section>`;
+      <section class="section card"><div class="mini-label">ABOUT V2.4</div><p>Media-resilient personal build. Vader imagery and the exact supplied breathing MP3 are embedded inside the application and reconstructed locally at runtime. Visual template, brightness, tone, saturation and contrast controls are now user-adjustable.</p></section>`;
     document.getElementById('saveName').onclick=()=>{state.name=document.getElementById('nameInput').value.trim();saveState();toast('Command profile updated.');};
     ['navSound','breathingSound','haptics'].forEach(id=>document.getElementById(id).onchange=e=>{state.settings[id]=e.target.checked;saveState();});
     document.getElementById('volume').oninput=e=>{state.settings.volume=Number(e.target.value);document.getElementById('volLabel').textContent=`${Math.round(Number(e.target.value)*100)}%`;syncBreathAudioVolume();saveState();};
+    const displayIds=['colorTheme','visualTone','uiBrightness','imageBrightness','imageSaturation','imageContrast'];
+    displayIds.forEach(id=>document.getElementById(id).oninput=e=>{
+      state.settings[id]=(id==='colorTheme'||id==='visualTone')?e.target.value:Number(e.target.value);
+      const label=document.getElementById(id+'Label'); if(label)label.textContent=`${e.target.value}%`;
+      applyDisplaySettings(); saveState();
+    });
+    document.getElementById('resetDisplay').onclick=()=>{resetDisplaySettings();renderSettings(root);toast('Visual settings reset.');};
     document.getElementById('testSound').onclick=()=>playNavCue();
     document.getElementById('testBreathSound').onclick=()=>testBreathingAudio();
+    document.getElementById('runMediaCheck').onclick=()=>runMediaDiagnostics(true);
     document.getElementById('exportData').onclick=()=>{const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`vader-mode-backup-${todayKey()}.json`;a.click();URL.revokeObjectURL(a.href);};
-    document.getElementById('importFile').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const raw=JSON.parse(r.result);state={...structuredClone(defaultState),...raw,settings:{...defaultState.settings,...(raw.settings||{})}};saveState();toast('Backup imported.');render();}catch{toast('That backup could not be read.');}};r.readAsText(f);};
-    document.getElementById('resetData').onclick=()=>{if(confirm('Reset all Vader Mode data on this browser?')){state=structuredClone(defaultState);saveState();render();toast('Local data reset. The corridor is eerily quiet.');}};
+    document.getElementById('importFile').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const raw=JSON.parse(r.result);state={...structuredClone(defaultState),...raw,settings:{...defaultState.settings,...(raw.settings||{})}};saveState();applyDisplaySettings();toast('Backup imported.');render();}catch{toast('That backup could not be read.');}};r.readAsText(f);};
+    document.getElementById('resetData').onclick=()=>{if(confirm('Reset all Vader Mode data on this browser?')){state=structuredClone(defaultState);saveState();applyDisplaySettings();render();toast('Local data reset. The corridor is eerily quiet.');}};
+    runMediaDiagnostics(false);
+  }
+
+  async function runMediaDiagnostics(showToast=false) {
+    const imgEl=document.getElementById('imageMediaStatus');
+    const audEl=document.getElementById('audioMediaStatus');
+    const imageSources=[...new Set(galleryVisuals.map(x=>x.src))];
+    let loaded=0;
+    await Promise.all(imageSources.map(src=>new Promise(resolve=>{
+      const im=new Image(); let settled=false;
+      const done=(ok)=>{if(settled)return;settled=true;if(ok&&im.naturalWidth>0)loaded++;resolve();};
+      im.onload=()=>done(true); im.onerror=()=>done(false); im.src=src;
+      if(im.complete)done(im.naturalWidth>0);
+    })));
+    if(imgEl) { imgEl.textContent=`${loaded}/${imageSources.length} loaded`; imgEl.dataset.ok=loaded===imageSources.length?'1':'0'; }
+    const audio=getBreathAudio();
+    let audioText='Not ready';
+    try {
+      if(Number.isFinite(audio.duration)&&audio.duration>0) audioText=`Ready • ${audio.duration.toFixed(1)} sec`;
+      else {
+        await new Promise(resolve=>{
+          const finish=()=>resolve();
+          audio.addEventListener('loadedmetadata',finish,{once:true});
+          audio.addEventListener('error',finish,{once:true});
+          setTimeout(finish,1800);
+          try{audio.load();}catch{}
+        });
+        audioText=Number.isFinite(audio.duration)&&audio.duration>0?`Ready • ${audio.duration.toFixed(1)} sec`:'Load failed';
+      }
+    } catch { audioText='Load failed'; }
+    if(audEl){audEl.textContent=audioText;audEl.dataset.ok=audioText.startsWith('Ready')?'1':'0';}
+    if(showToast) toast(loaded===imageSources.length && audioText.startsWith('Ready')?'Media check passed. Images and breathing track are ready.':'Media check found a problem. See the status panel.');
   }
 
   function openLesson(id) {
@@ -1232,6 +1341,7 @@
   }
 
   document.body.dataset.view=currentView;
+  applyDisplaySettings();
   initSwipeNavigation();
   renderNav(); updateRankUI(); render();
 })();

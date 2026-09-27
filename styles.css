@@ -257,7 +257,7 @@ hr.sep { border:0; border-top:1px solid var(--border); margin:18px 0; }
 .vader-hero {
   background-image:
     linear-gradient(90deg, rgba(7,8,11,.97) 0%, rgba(7,8,11,.87) 46%, rgba(7,8,11,.30) 76%, rgba(7,8,11,.14) 100%),
-    url('./assets/vader-command.webp');
+    var(--hero-media);
   background-size:cover; background-position:center right;
 }
 .vader-hero::after { border-color:rgba(237,43,58,.18); }
@@ -302,7 +302,7 @@ hr.sep { border:0; border-top:1px solid var(--border); margin:18px 0; }
   border:1px solid rgba(237,43,58,.26); border-radius:28px; overflow:hidden; position:relative;
   background:
     linear-gradient(100deg,rgba(7,8,11,.96),rgba(7,8,11,.73),rgba(7,8,11,.25)),
-    url('./assets/vader-corridor.webp') center/cover;
+    var(--corridor-media) center/cover;
 }
 .transmission-hero > * { position:relative; z-index:2; }
 .transmission-hero h3 { font-size:clamp(2.2rem,5vw,4.4rem); margin:12px 0 8px; max-width:760px; letter-spacing:-.05em; }
@@ -313,7 +313,7 @@ hr.sep { border:0; border-top:1px solid var(--border); margin:18px 0; }
 .breathing-card { padding:0; overflow:hidden; position:relative; }
 .breathing-image { height:220px; background:
   linear-gradient(180deg,rgba(7,8,10,.06),rgba(7,8,10,.86)),
-  url('./assets/vader-closeup.webp') center 32%/cover; border-bottom:1px solid var(--border); }
+  var(--breathing-media) center 32%/cover; border-bottom:1px solid var(--border); }
 .breathing-content { padding:20px; }
 .mechanical-note { display:flex; gap:12px; align-items:flex-start; background:#0b0c10; border:1px solid var(--border); border-radius:14px; padding:14px; }
 .mechanical-note p { margin:4px 0 0; }
@@ -348,7 +348,7 @@ body[data-view="transmissions"] .topbar { border-bottom-color:rgba(237,43,58,.16
   .breathing-image { height:180px; }
 }
 .brand-block { position:relative; overflow:hidden; }
-.brand-block::after { content:""; position:absolute; right:-26px; bottom:-20px; width:116px; height:92px; background:url('./assets/vader-command.webp') 64% center/cover; opacity:.13; filter:grayscale(1) contrast(1.2); mask-image:linear-gradient(90deg,transparent,#000 35%); pointer-events:none; }
+.brand-block::after { content:""; position:absolute; right:-26px; bottom:-20px; width:116px; height:92px; background-image:var(--hero-media); background-position:64% center; background-size:cover; opacity:.13; filter:grayscale(1) contrast(1.2); mask-image:linear-gradient(90deg,transparent,#000 35%); pointer-events:none; }
 
 /* ===== Vader Mode V2.1 reliability patch: explicit media elements ===== */
 .vader-hero {
@@ -499,3 +499,56 @@ body[data-view="transmissions"] .topbar { border-bottom-color:rgba(237,43,58,.16
   .custom-postcard-preview {min-height:420px;}
   .gallery-modal-caption {padding:22px;}
 }
+
+
+/* ===== V2.4 media resilience + user-controlled visual system ===== */
+:root {
+  --ui-light-alpha: 0;
+  --ui-dark-alpha: 0;
+  --image-brightness: 100%;
+  --image-saturation: 100%;
+  --image-contrast: 105%;
+  --image-grayscale: 0;
+  --image-sepia: .04;
+  --image-hue: -2deg;
+}
+html[data-theme="imperial-red"] {
+  --bg:#08090b; --panel:#101116; --panel-2:#171920; --panel-3:#20232c; --text:#f5f2ec; --muted:#aaa9b0;
+  --red:#ed2b3a; --red-2:#a90f25; --amber:#ffbf55; --green:#5dd39e; --blue:#6ea8fe; --border:rgba(255,255,255,.09);
+}
+html[data-theme="mustafar"] {
+  --bg:#0c0705; --panel:#17100d; --panel-2:#21140f; --panel-3:#2c1a12; --text:#fff3e8; --muted:#c2a99d;
+  --red:#ff5b2c; --red-2:#b42612; --amber:#ffc15a; --green:#8ed3a5; --blue:#84aee8; --border:rgba(255,177,115,.12);
+}
+html[data-theme="bespin-blue"] {
+  --bg:#060b11; --panel:#0d1621; --panel-2:#122235; --panel-3:#1a3049; --text:#eef7ff; --muted:#98adc0;
+  --red:#5ca8ff; --red-2:#2766b0; --amber:#ffd36f; --green:#62d6b1; --blue:#87c1ff; --border:rgba(143,196,255,.12);
+}
+html[data-theme="carbon"] {
+  --bg:#090909; --panel:#131313; --panel-2:#1d1d1d; --panel-3:#292929; --text:#f2f2f2; --muted:#a6a6a6;
+  --red:#c9c9c9; --red-2:#757575; --amber:#d8d8d8; --green:#bcbcbc; --blue:#b7b7b7; --border:rgba(255,255,255,.11);
+}
+html[data-theme="sith-neon"] {
+  --bg:#09060d; --panel:#15101c; --panel-2:#211529; --panel-3:#30203b; --text:#fff3ff; --muted:#bea7c8;
+  --red:#ff315f; --red-2:#9f1546; --amber:#ffbe5c; --green:#63e0b8; --blue:#a78bfa; --border:rgba(255,96,156,.13);
+}
+body::before, body::after { content:""; position:fixed; inset:0; pointer-events:none; z-index:999999; }
+body::before { background:rgba(255,255,255,var(--ui-light-alpha)); mix-blend-mode:screen; }
+body::after { background:rgba(0,0,0,var(--ui-dark-alpha)); }
+body img:not(.no-theme-filter) {
+  filter: brightness(var(--image-brightness)) saturate(var(--image-saturation)) contrast(var(--image-contrast)) grayscale(var(--image-grayscale)) sepia(var(--image-sepia)) hue-rotate(var(--image-hue));
+  transition:filter .18s ease;
+}
+.display-controls .field { margin-bottom:14px; }
+.theme-swatches { display:grid; grid-template-columns:repeat(5,1fr); gap:7px; margin:-2px 0 16px; }
+.swatch { height:13px; border-radius:999px; border:1px solid rgba(255,255,255,.14); }
+.swatch.imperial { background:linear-gradient(90deg,#08090b,#ed2b3a); }
+.swatch.mustafar { background:linear-gradient(90deg,#0c0705,#ff5b2c); }
+.swatch.bespin { background:linear-gradient(90deg,#060b11,#5ca8ff); }
+.swatch.carbon { background:linear-gradient(90deg,#080808,#d0d0d0); }
+.swatch.neon { background:linear-gradient(90deg,#09060d,#ff315f,#a78bfa); }
+.media-check-preview { height:160px; border-radius:16px; overflow:hidden; border:1px solid var(--border); background:#050506; margin:10px 0 14px; }
+.media-check-preview img { width:100%; height:100%; object-fit:cover; display:block; }
+.media-status-row { display:flex; align-items:center; justify-content:space-between; gap:16px; padding:10px 0; border-top:1px solid var(--border); }
+.media-status-row strong[data-ok="1"] { color:var(--green); }
+.media-status-row strong[data-ok="0"] { color:#ff858e; }

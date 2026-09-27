@@ -1,6 +1,6 @@
-const CACHE='vader-mode-v2.3-exact-audio-loop';
+const CACHE='vader-mode-v2.4-embedded-media-theme-controls';
 const ASSETS=[
-  './','./index.html','./styles.css','./app.js','./manifest.webmanifest','./icon.svg',
+  './','./index.html','./styles.css','./media.js','./app.js','./manifest.webmanifest','./icon.svg',
   './assets/vader-command.webp','./assets/vader-army.webp','./assets/vader-smoke.webp',
   './assets/vader-mask-art.webp','./assets/vader-portrait-red.webp','./assets/vader-closeup.webp',
   './assets/vader-clouds.webp','./assets/vader-saber-dark.webp','./assets/vader-red-face.webp',
