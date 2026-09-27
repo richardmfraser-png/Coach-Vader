@@ -446,14 +446,24 @@
   function masterVolume(mult=1) { return Math.max(0, Math.min(1, Number(state.settings?.volume ?? .62))) * mult; }
   function getBreathAudio() {
     if (!breathAudio) {
-      breathAudio = new Audio();
+      breathAudio = document.createElement('audio');
+      breathAudio.id = 'vaderBreathAudioEngine';
       breathAudio.loop = true;
       breathAudio.preload = 'auto';
+      breathAudio.playsInline = true;
       breathAudio.setAttribute('playsinline','');
       breathAudio.setAttribute('webkit-playsinline','');
+      breathAudio.setAttribute('aria-hidden','true');
+      breathAudio.style.position='fixed';
+      breathAudio.style.width='1px';
+      breathAudio.style.height='1px';
+      breathAudio.style.opacity='0';
+      breathAudio.style.pointerEvents='none';
       breathAudio.src = BREATH_AUDIO;
+      document.body.appendChild(breathAudio);
       try { breathAudio.load(); } catch {}
     }
+    breathAudio.muted = false;
     breathAudio.volume = Math.max(0, Math.min(1, Number(state.settings?.volume ?? .62)));
     return breathAudio;
   }
@@ -516,7 +526,7 @@
     const p=audio.play();
     if (p && typeof p.catch === 'function') {
       p.catch(()=>{
-        toast('The original breathing track was blocked by this preview. Open in Safari/Chrome and tap Start chamber again.');
+        toast('Chrome blocked local-file audio in this viewer. For guaranteed Chrome playback, use the HTTPS/GitHub Pages build.');
       });
     }
   }
@@ -537,7 +547,7 @@
     try { audio.currentTime=0; } catch {}
     const p=audio.play();
     if (p && typeof p.catch === 'function') {
-      p.catch(()=>{ toast('The original breathing track was blocked here — try opening the standalone file in Safari/Chrome.'); });
+      p.catch(()=>{ toast('Chrome blocked local-file audio in this viewer. Use the hosted HTTPS build for guaranteed playback.'); });
     }
     breathAudioTestTimer=setTimeout(()=>stopMechanicalBreathing(),6500);
   }
@@ -1235,7 +1245,8 @@
           <div class="media-check-preview"><img id="mediaCheckImage" src="${HERO_IMAGE}" alt="Vader media test"></div>
           <div class="media-status-row"><span>Images</span><strong id="imageMediaStatus">Checking…</strong></div>
           <div class="media-status-row"><span>Breathing track</span><strong id="audioMediaStatus">Checking…</strong></div>
-          <p class="muted">V2.4 reconstructs all images and your original MP3 from bytes embedded inside the app, so broken relative file paths cannot remove the media.</p>
+          <div class="media-status-row"><span>Runtime</span><strong id="runtimeMediaStatus">Checking…</strong></div>
+          <p class="muted">V2.5 reconstructs all images and your original MP3 from bytes embedded inside the app, so broken relative file paths cannot remove the media.</p>
           <button class="btn btn-primary" id="runMediaCheck">Run media check</button>
         </article>
         <article class="card">
@@ -1248,7 +1259,7 @@
         </article>
       </div>
       <section class="section card warning"><div class="mini-label">DANGER ZONE</div><h3>Reset the Empire</h3><p>Deletes all local progress, logs, goals, check-ins and customization from this browser.</p><button class="btn btn-ghost" id="resetData">Reset all local data</button></section>
-      <section class="section card"><div class="mini-label">ABOUT V2.4</div><p>Media-resilient personal build. Vader imagery and the exact supplied breathing MP3 are embedded inside the application and reconstructed locally at runtime. Visual template, brightness, tone, saturation and contrast controls are now user-adjustable.</p></section>`;
+      <section class="section card"><div class="mini-label">ABOUT V2.5</div><p>Chrome-safe personal build. Vader imagery and the exact supplied breathing MP3 are embedded as direct data URIs, with no Blob URL dependency. Visual template, brightness, tone, saturation and contrast controls are now user-adjustable.</p></section>`;
     document.getElementById('saveName').onclick=()=>{state.name=document.getElementById('nameInput').value.trim();saveState();toast('Command profile updated.');};
     ['navSound','breathingSound','haptics'].forEach(id=>document.getElementById(id).onchange=e=>{state.settings[id]=e.target.checked;saveState();});
     document.getElementById('volume').oninput=e=>{state.settings.volume=Number(e.target.value);document.getElementById('volLabel').textContent=`${Math.round(Number(e.target.value)*100)}%`;syncBreathAudioVolume();saveState();};
@@ -1280,6 +1291,15 @@
       if(im.complete)done(im.naturalWidth>0);
     })));
     if(imgEl) { imgEl.textContent=`${loaded}/${imageSources.length} loaded`; imgEl.dataset.ok=loaded===imageSources.length?'1':'0'; }
+    const runtimeEl=document.getElementById('runtimeMediaStatus');
+    const proto=location.protocol || 'unknown:';
+    const ua=navigator.userAgent||'';
+    const isChrome=/CriOS|Chrome\//.test(ua);
+    if(runtimeEl){
+      const localLike=!/^https?:$/.test(proto);
+      runtimeEl.textContent=(isChrome&&localLike)?'Chrome local-file mode — HTTPS recommended':`${isChrome?'Chrome':'Browser'} • ${proto.replace(':','')||'local'}`;
+      runtimeEl.dataset.ok=(isChrome&&localLike)?'0':'1';
+    }
     const audio=getBreathAudio();
     let audioText='Not ready';
     try {

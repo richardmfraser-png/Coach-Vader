@@ -1,4 +1,4 @@
-const CACHE='vader-mode-v2.4-embedded-media-theme-controls';
+const CACHE='vader-mode-v2.5-chrome-safe-data-uri';
 const ASSETS=[
   './','./index.html','./styles.css','./media.js','./app.js','./manifest.webmanifest','./icon.svg',
   './assets/vader-command.webp','./assets/vader-army.webp','./assets/vader-smoke.webp',

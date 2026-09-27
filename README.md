@@ -1,30 +1,32 @@
-# VADER MODE V2.4 — Media-Resilient Build
+# VADER MODE V2.5 — Chrome-Safe Build
 
-This build fixes the media-loading issue by embedding every Vader image and the original breathing MP3 inside `media.js`, then reconstructing them as local Blob URLs at runtime. The visible app no longer depends on relative image/audio paths.
+This revision specifically addresses Chrome/local-file compatibility.
 
-## What changed
-- 11 Vader images embedded in the application and reconstructed locally.
-- Exact original breathing MP3 embedded byte-for-byte; no trimming, gain change, filtering, or re-encoding.
-- Native full-track looping during Breathing Chamber sessions.
-- Built-in **Media Check** in Settings reports image load count and breathing-track readiness.
-- New display controls: colour template, visual tone, overall brightness, image brightness, saturation, and contrast.
-- Five colour templates: Imperial Red, Mustafar Ember, Bespin Blue, Carbon Monochrome, Sith Neon.
+## Key change
+V2.4 reconstructed embedded media as `blob:` URLs. Safari handles that path well, but Chrome/mobile document viewers can impose stricter local-file or embedded-media rules. V2.5 removes that dependency completely.
+
+- All 11 Vader images are embedded as direct `data:image/webp;base64,...` sources.
+- The exact supplied Darth Vader breathing MP3 is embedded as a direct `data:audio/mpeg;base64,...` source.
+- The breathing element is now a real `<audio>` element attached to the document, which improves mobile Chrome playback after the user taps **Start chamber** or **Test breathing audio**.
+- No trimming, gain change, filtering, or re-encoding of the supplied MP3.
+- Existing colour templates, image tone, brightness, saturation and contrast controls remain.
+- Settings → Media Check now reports the browser/runtime mode as well as image and audio readiness.
 
 ## Audio integrity
-Original supplied MP3 SHA-256:
+SHA-256 of packaged breathing MP3:
 `00e1b681b529332cacad7073a61c68d0027e554b70121297ad89b54a293ede44`
 
-Packaged V2.4 MP3 SHA-256:
-`00e1b681b529332cacad7073a61c68d0027e554b70121297ad89b54a293ede44`
+## Important Chrome note
+A downloaded standalone `.html` file is still subject to Chrome's local-file/document-viewer restrictions, especially on mobile. No app code can fully control those browser restrictions. The reliable deployment target for Chrome is **HTTPS**.
 
-These are identical.
+### Recommended
+Upload the full V2.5 folder to GitHub Pages (or Netlify/Cloudflare Pages) and open the HTTPS URL in Chrome. That removes the local-file sandbox, gives the service worker/PWA a normal origin, and is the configuration to use for seamless Chrome behavior.
 
-## Testing
-1. Open `index.html` through a normal web server (GitHub Pages is ideal), or use the standalone HTML.
-2. Open **Settings** → **Media Check** → **Run media check**.
-3. It should report `11/11 loaded` and `Ready • ~35.7 sec`.
-4. Tap **Test breathing audio**. User interaction is required by mobile browsers before audio can play.
-5. Open **Gallery & Postcards** and confirm the imagery loads throughout.
+## Quick GitHub Pages deployment
+1. Create a repository and upload the contents of the `vader-mode-v2_5` folder.
+2. In GitHub: **Settings → Pages → Deploy from a branch**.
+3. Select your main branch and `/ (root)`.
+4. Open the generated `https://...github.io/...` address in Chrome.
+5. Run **Settings → Media Check**; images should report 11/11 and the breathing track should report Ready.
 
-## Hosting
-This remains a static application. Upload the whole folder to GitHub Pages, Netlify, Cloudflare Pages, or any ordinary web host. No backend is required.
+The standalone file is retained for Safari/local convenience; the hosted HTTPS build is the canonical Chrome version.
